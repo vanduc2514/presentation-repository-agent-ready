@@ -23,7 +23,7 @@ Supporting material:
 
 **Prerequisites:** none. The talk is a lecture; nothing needs to be installed to follow along. The setup is shown so the audience can repeat it later. The Agents window is in Preview, which matters only to those who try it afterwards.
 
-**Format:** no live demo, no exercise and no break. The first slide of each area carries one still image, one per area and listed in section 4, captured beforehand from a synthetic demo repository named on the slide. Use PNG at 1440 px wide under 250 KB, or SVG when the content is text. The stills live in `slides/images/`; markpress embeds them into the HTML, and the build also copies the folder as a fallback. The talk uses stills rather than video. The areas segment runs about four minutes per slide; the still gives the slide its concrete half, and the explanation carries the rest.
+**Format:** no live demo, no exercise and no break. The first slide of each area carries one still image, one per area and listed in section 4, captured beforehand from a synthetic demo repository. The repository is named when it is introduced, and the stills are constructed to show the pattern, not to be representative; say so when the first one appears. Use PNG at 1440 px wide under 250 KB, or SVG when the content is text. The stills live in `slides/images/`; markpress embeds them into the HTML, and the build also copies the folder as a fallback. The talk uses stills rather than video. The areas segment runs about four minutes per slide; the still gives the slide its concrete half, and the explanation carries the rest.
 
 **Out of scope:** model choice and prompt technique. The model is held fixed for the whole talk; improving it is a different subject.
 
@@ -314,7 +314,7 @@ The last one is the point of the loop: monitoring should also remove things. An 
 
 A conditional second step is the next iteration, not a second change made at the same time. Try the first one, look at the next session, then decide.
 
-For slide 21, use one of your own sessions and fill in five fields: the task, what happened, the signal that stood out, the smallest fix, and what the next similar session did. An illustrative shape, not a measured result:
+For the worked example, use one of your own sessions and fill in five fields: the task, what happened, the signal that stood out, the smallest fix, and what the next similar session did. An illustrative shape, not a measured result:
 
 | Field | Example |
 |---|---|
@@ -379,7 +379,7 @@ One line for the slide: a person learns the setup once, an agent pays for it eve
 
 ### 7.1 The transfer map
 
-The evidence file calls this the core of the frame: each DevEx principle, its agent analogue, and how much confidence to place in it. Slide 24 shows this, with the strength column.
+The evidence file calls this the core of the frame: each DevEx principle, its agent analogue, and how much confidence to place in it. The closing section puts this on one slide, with the strength column.
 
 The six conditions are what the talk did; the seven principles are why, and how much confidence to place in each. Rows 1 to 4 justify the environment work; rows 5 to 7 justify the monitoring.
 
@@ -404,39 +404,7 @@ The talk uses the strong rows as the frame and says out loud that the self-repor
 - A habit: watch correctness, tokens, time and human effort, then make the next small fix.
 - A name for the work you saw: DevEx for Coding Agents, with the six conditions it maps to.
 
-## Appendix A. Slide outline
-
-1. Title.
-2. The agent already works. This talk is about how well.
-3. What "not effectively" looks like.
-4. Why: every unanswered question becomes an inference. The six questions arrive at slide 7.
-5. The reframe: small optimizations to the working environment.
-6. What this talk is not: no model choice, no prompting, no checklist, no measurement.
-7. Six questions the repository should answer.
-8. Six areas, in no required order, with the trigger for each.
-9. AGENTS.md: commands, layout, conventions, boundaries, done.
-10. A bad AGENTS.md against a good one.
-11. Scripts: one command per intent.
-12. Skills: procedures on demand.
-13. Hooks: rules the model cannot skip.
-14. MCP: only for a real gap.
-15. Orchestration: the tool a person uses to control agents, not a repository change.
-16. Custom agents, subagents and worktrees.
-17. Add improvements one at a time, and stop when the friction is gone.
-18. Monitoring: the work after setup.
-19. Four signals to watch: correctness, tokens, time, human effort.
-20. From signal to fix: the loop.
-21. One example: a long session and what fixed it, filled from your own log.
-22. DevEx for coding agents: the six conditions of work.
-23. The conditions mapped to the areas and questions, and the half that does not transfer.
-24. The transfer map: seven principles, and why they sit behind the six conditions.
-25. Anti-patterns: the five that matter, with the rest on a handout.
-26. Lessons.
-27. Close: the model is the same; the environment is what you can change.
-
-Artifact source: one synthetic repository, named on slide 9, with four modules (API, web, infrastructure, database) and seeded bugs. Every still comes from it. It is constructed to show the pattern, not to be representative; say this out loud when the first still appears.
-
-## Appendix B. Anti-patterns to name on stage
+## Appendix A. Anti-patterns to name on stage
 
 For the stage, name five: installing everything before noticing the friction, auto-generating AGENTS.md, long instruction files, hooks that block everything, and watching tokens without checking correctness. The rest go on a handout.
 
@@ -454,7 +422,7 @@ Handout: one page with all eleven bullets below and a one-line explanation each,
 - Building a dashboard without a habit of acting on it.
 - Treating a configuration file as proof that a capability works.
 
-## Appendix C. Claims to avoid
+## Appendix B. Claims to avoid
 
 - That the repository is the only factor. The model matters too, and it is held fixed here.
 - That the agent cannot work without this setup. It can; the setup changes how well.
@@ -466,7 +434,7 @@ Handout: one page with all eleven bullets below and a one-line explanation each,
 - That the framing is new. Spotify, Modal, incident.io and others have made the same case.
 - That agents have feelings or satisfaction. Talk about outcomes.
 
-## Appendix D. Sources and further reading
+## Appendix C. Sources and further reading
 
 - Lulla et al., [On the Impact of AGENTS.md Files on the Efficiency of AI Coding Agents](https://arxiv.org/html/2601.20404v2)
 - Gloaguen et al., [Evaluating AGENTS.md](https://arxiv.org/abs/2602.11988)
