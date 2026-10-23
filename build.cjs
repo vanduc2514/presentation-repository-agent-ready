@@ -30,6 +30,7 @@ const OUTPUT_VI = path.resolve(OUTPUT_DIR, "index.vi.html");
 // ─────────────────────────────────────────────────────────────────────────────
 // ASSET PATHS
 // ─────────────────────────────────────────────────────────────────────────────
+const SLIDES_IMAGES_DIR = path.resolve(__dirname, "slides/images");
 const PUBLIC_DIR = path.resolve(__dirname, "public");
 const PRESENTATION_DIR = path.resolve(PUBLIC_DIR, "presentation");
 const REMOTE_DIR = path.resolve(PUBLIC_DIR, "remote");
@@ -192,6 +193,12 @@ const copyFile = (src, dest, content) => {
   console.log(`Copied: ${dest}`);
 };
 
+const copyDir = (src, dest) => {
+  if (!fs.existsSync(src)) return;
+  fs.cpSync(src, dest, { recursive: true });
+  console.log(`Copied: ${dest}`);
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 // RUN (only when called directly, not when required as a module)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -210,6 +217,9 @@ if (require.main === module) {
   // Copy presentation assets to output root
   copyFile(PRESENTATION_CSS_FILE, path.join(OUTPUT_DIR, "presentation.css"));
   copyFile(PRESENTATION_JS_FILE, path.join(OUTPUT_DIR, "presentation.js"));
+
+  // Copy slide images so markdown references resolve in output/
+  copyDir(SLIDES_IMAGES_DIR, path.join(OUTPUT_DIR, "images"));
 
   Promise.all([
     buildPresentation(INPUT_EN, OUTPUT_EN, LANG_SWITCHER.en, "en"),
