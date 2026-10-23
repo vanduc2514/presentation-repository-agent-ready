@@ -127,7 +127,7 @@ const applyHighlighting = (html) => {
 // Wraps the slide text and its image paragraph in separate containers so they
 // render as two side-by-side cards.
 // ─────────────────────────────────────────────────────────────────────────────
-const IMAGE_PARAGRAPH = /<p>\s*<img\b[^>]*>\s*<\/p>/;
+const IMAGE_PARAGRAPH = /<p>\s*<img\b[^>]*>\s*<\/p>/g;
 
 const wrapImageSlides = (html) => {
   return html
@@ -143,11 +143,11 @@ const wrapImageSlides = (html) => {
       if (closeAt === -1) return chunk;
 
       const inner = body.slice(0, closeAt);
-      const imageMatch = inner.match(IMAGE_PARAGRAPH);
-      if (!imageMatch) return chunk;
+      const imageMatches = inner.match(IMAGE_PARAGRAPH);
+      if (!imageMatches) return chunk;
 
-      const imageHtml = imageMatch[0];
-      const copyHtml = inner.replace(imageHtml, "");
+      const imageHtml = imageMatches.join("");
+      const copyHtml = inner.replace(IMAGE_PARAGRAPH, "");
 
       return (
         `${openTag}<div class="step-copy">${copyHtml}</div>` +

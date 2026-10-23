@@ -329,10 +329,12 @@ body {
 }
 
 .step-media {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(0.8rem, 1.5vw, 1.25rem);
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  align-items: stretch;
+  justify-items: stretch;
+  gap: clamp(0.5rem, 1vw, 0.85rem);
+  padding: clamp(0.45rem, 0.9vw, 0.75rem);
   background: #0f172a;
 }
 
@@ -342,14 +344,25 @@ body {
   border-width: 2px;
 }
 
+/* A single image fills the card; several images split the height evenly. */
+.step-media > p {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .step-media img {
+  position: absolute;
+  inset: 0;
   display: block;
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 14px;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
   object-fit: contain;
+  object-position: center;
 }
 
 /* ── RESPONSIVE ────────────────────────────────────────────────────── */
@@ -407,11 +420,10 @@ body {
   }
 
   .step-media {
-    min-height: 34vh;
-  }
-
-  .step-media img {
-    max-height: 34vh;
+    height: 46vh;
+    min-height: 240px;
+    grid-auto-rows: minmax(0, 1fr);
+    gap: 0.5rem;
   }
 }
 
@@ -500,6 +512,187 @@ body {
   --group-accent: #047857;
 }
 
+/* ── ENTRANCE ANIMATIONS ───────────────────────────────────────────────
+ * Only the active slide animates, so the cost stays on one element while
+ * the impress camera moves. Six variants cycle so consecutive slides do
+ * not enter the same way.
+ * ───────────────────────────────────────────────────────────────────── */
+@keyframes mp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+
+@keyframes mp-sink {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes mp-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+}
+
+@keyframes mp-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+}
+
+@keyframes mp-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@keyframes mp-tilt {
+  from {
+    opacity: 0;
+    transform: rotate(-1.6deg) translateY(14px);
+  }
+}
+
+@keyframes mp-media-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes mp-media-slide {
+  from {
+    opacity: 0;
+    transform: translateX(34px);
+  }
+}
+
+@keyframes mp-bar-grow {
+  from {
+    transform: scaleY(0.15);
+  }
+}
+
+#impress .step {
+  --enter: mp-rise;
+  --enter-media: mp-media-zoom;
+}
+
+#impress .step:nth-child(6n + 2) {
+  --enter: mp-in-left;
+  --enter-media: mp-media-slide;
+}
+
+#impress .step:nth-child(6n + 3) {
+  --enter: mp-zoom;
+}
+
+#impress .step:nth-child(6n + 4) {
+  --enter: mp-in-right;
+  --enter-media: mp-media-slide;
+}
+
+#impress .step:nth-child(6n + 5) {
+  --enter: mp-tilt;
+}
+
+#impress .step:nth-child(6n) {
+  --enter: mp-sink;
+  --enter-media: mp-media-slide;
+}
+
+.step.active > *:not(.step-copy):not(ul):not(ol) {
+  animation: var(--enter) 520ms cubic-bezier(0.22, 0.68, 0.28, 1) both;
+}
+
+.step.active > .step-copy > *:not(ul):not(ol) {
+  animation: var(--enter) 520ms cubic-bezier(0.22, 0.68, 0.28, 1) both;
+}
+
+.step.active li {
+  animation: var(--enter) 420ms cubic-bezier(0.22, 0.68, 0.28, 1) both;
+}
+
+.step.active li:nth-child(1) {
+  animation-delay: 80ms;
+}
+
+.step.active li:nth-child(2) {
+  animation-delay: 130ms;
+}
+
+.step.active li:nth-child(3) {
+  animation-delay: 180ms;
+}
+
+.step.active li:nth-child(4) {
+  animation-delay: 230ms;
+}
+
+.step.active li:nth-child(n + 5) {
+  animation-delay: 280ms;
+}
+
+.step.active > .step-media {
+  animation: var(--enter-media) 620ms cubic-bezier(0.22, 0.68, 0.28, 1) both;
+}
+
+.step.active > *:nth-child(2),
+.step.active > .step-copy > *:nth-child(1) {
+  animation-delay: 70ms;
+}
+
+.step.active > *:nth-child(3),
+.step.active > .step-copy > *:nth-child(2) {
+  animation-delay: 130ms;
+}
+
+.step.active > *:nth-child(4),
+.step.active > .step-copy > *:nth-child(3) {
+  animation-delay: 190ms;
+}
+
+.step.active > *:nth-child(5),
+.step.active > .step-copy > *:nth-child(4) {
+  animation-delay: 250ms;
+}
+
+.step.active > *:nth-child(n + 6),
+.step.active > .step-copy > *:nth-child(n + 5) {
+  animation-delay: 310ms;
+}
+
+.step.active > .step-media {
+  animation-delay: 90ms;
+}
+
+.step.active::after {
+  animation: mp-bar-grow 520ms cubic-bezier(0.22, 0.68, 0.28, 1) both;
+  transform-origin: top center;
+}
+
+.step.active > .step-copy::after {
+  animation: mp-bar-grow 520ms cubic-bezier(0.22, 0.68, 0.28, 1) both;
+  transform-origin: top center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step.active > *,
+  .step.active > .step-copy > *,
+  .step.active li,
+  .step.active > .step-media,
+  .step.active::after,
+  .step.active > .step-copy::after {
+    animation: none;
+  }
+}
+
 /* ── CLOSING SLIDE (QR CODE TABLE) ─────────────────────────────────── */
 .step:has(table img) {
   justify-content: center;
@@ -544,6 +737,10 @@ body {
   height: 168px;
   object-fit: contain;
   margin: 0 auto;
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
 }
 
 .step:has(table img) tbody tr:nth-child(2) img {
