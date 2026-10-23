@@ -2,7 +2,7 @@
 
 Research date: 2026-10-22
 
-Purpose: evidence base for the talk **DevEx for Coding Agents: What Transfers, What Breaks**. This document covers developer experience (DevEx), its application to coding agents, prior art, and measurement. It stays deliberately focused on DevEx and its agent-side analogues.
+Purpose: evidence base for the talk **Building an Agent-Friendly Repository**. This document covers developer experience (DevEx), its application to coding agents, prior art, and the signals worth watching. It stays deliberately focused on DevEx and its agent-side analogues.
 
 ---
 
@@ -17,7 +17,7 @@ Purpose: evidence base for the talk **DevEx for Coding Agents: What Transfers, W
 
 **DevEx for Coding Agents** means applying the second meaning to the conditions in which coding agents work: instructions, tools, feedback, context, guardrails, and orchestration.
 
-It does not claim that agents have feelings, satisfaction, or well-being. It uses DevEx as a design and measurement discipline for the environment agents operate in.
+It does not claim that agents have feelings, satisfaction, or well-being. It uses DevEx as a design discipline for the environment agents operate in.
 
 **Agent-side analogue** means the agent equivalent of a specific DevEx principle. It is the right-hand column of the transfer map, not a separate field.
 
@@ -95,7 +95,7 @@ This is the core intellectual contribution of the talk.
 
 The rule for the audience:
 
-> Transfer the principles. Re-derive the metrics. Measure before you standardize.
+> Transfer the principles. Re-derive the signals. Watch before you standardize.
 
 ---
 
@@ -108,22 +108,22 @@ The rule for the audience:
 | Same model and thinking effort, two harnesses: more than 2x cost difference, same quality; one harness sent about 3x less context per turn | [Databricks benchmark](https://www.databricks.com/blog/benchmarking-coding-agents-databricks-multi-million-line-codebase) | Harness and context management can matter as much as model choice |
 | Most expensive task consumed roughly 7 million more tokens than the cheapest; the most expensive run of the same task cost about 2x the cheapest run | [How Do AI Agents Spend Your Money?](https://arxiv.org/html/2604.22750v3) | Cost variance is structural, especially on complex tasks |
 | Explore plus Fix phases account for about 64% of agent rounds; cache reads dominate token volume | [How Do AI Agents Spend Your Money?](https://arxiv.org/html/2604.22750v3) | Most spend goes to navigation and iteration, which repository structure can influence |
-| Experienced open-source developers took 19% longer with AI tools while believing they were faster | [METR RCT](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study) | Human perception is unreliable; measurement is mandatory |
+| Experienced open-source developers took 19% longer with AI tools while believing they were faster | [METR RCT](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study) | Human perception is unreliable; check the outcome |
 
 ### 4.2 Context files
 
 Two 2026 studies are the core evidence, and they disagree in useful ways.
 
-**Study A: efficiency gains** — [On the Impact of AGENTS.md Files on the Efficiency of AI Coding Agents](https://arxiv.org/html/2601.20404v2) (JAWS 2026)
+**Study A: efficiency gains** — Lulla et al., [On the Impact of AGENTS.md Files on the Efficiency of AI Coding Agents](https://arxiv.org/html/2601.20404v2) (JAWS 2026)
 
-- Design: 26 repositories with AGENTS.md; 10 randomly sampled; up to 15 merged PRs each; PRs limited to at most 100 changed lines and 5 files; paired runs with and without the file.
-- Results: mean output tokens fell **20.08%**; mean wall-clock time fell **20.27%**; median time fell **28.64%**.
+- Design: 26 repositories with AGENTS.md; 10 randomly sampled; up to 15 merged PRs each, 124 in total; PRs limited to at most 100 changed lines and 5 files; paired runs with and without the file.
+- Results: mean output tokens fell **20.08%** (median 16.58%); mean wall-clock time fell **20.27%** (median **28.64%**); the paper reports comparable task completion but did not measure correctness.
 - Limitation: measures efficiency, not correctness. A manual sanity check of 50 outputs found non-trivial changes, but there was no full quality evaluation.
 
-**Study B: context files can hurt** — [Evaluating AGENTS.md](https://arxiv.org/abs/2602.11988) (ETH Zurich and LogicStar.ai)
+**Study B: context files can hurt** — Gloaguen et al., [Evaluating AGENTS.md](https://arxiv.org/abs/2602.11988) (ETH Zurich and LogicStar.ai)
 
-- Design: four coding agents on SWE-bench Lite plus AGENTbench.
-- LLM-generated context files: success rate **-0.5%** on SWE-bench Lite and **-2%** on AGENTbench; steps **+2.45** and **+3.92**; cost **+20%** and **+23%**.
+- Design: four coding agents on SWE-bench and CTXbench, with 12 developer-written context files in CTXbench.
+- LLM-generated context files: resolution rate **-0.5 points** on SWE-bench and **-2.0 points** on CTXbench, neither significant (p = 0.87 and p = 0.37); steps **+2.45** and **+3.92**; cost **+20%** and **+23%** (p < 0.001).
 - Developer-written context files: marginal performance gain, but still more steps in every setting.
 - Behavioral finding: agents follow the instructions, which produces more testing and broader exploration, but the files do not work as effective repository overviews.
 - Conclusion: context files are "likely only desirable when manually written."
@@ -131,7 +131,7 @@ Two 2026 studies are the core evidence, and they disagree in useful ways.
 **Reconciliation**
 
 - A concise, accurate file reduces search effort; a long or auto-generated file adds context and steps without improving correctness.
-- Practical rule: **write it by hand, keep it short, include only what the agent cannot discover quickly, and measure both success and cost.**
+- Practical rule: **write it by hand, keep it short, include only what the agent cannot discover quickly, and check both correctness and cost.**
 
 ### 4.3 Capability: scripts, MCP, skills
 
@@ -146,7 +146,7 @@ Two 2026 studies are the core evidence, and they disagree in useful ways.
 - Hooks run shell commands at lifecycle points in an agent session, such as before or after a tool invocation ([VS Code hooks](https://code.visualstudio.com/docs/copilot/customization/hooks)). They are the only lever here that can enforce behavior deterministically.
 - Use hooks for behavior that must not depend on model compliance: protected paths, destructive commands, formatting, tests before completion. Log their executions; they add latency and can fail silently.
 - `git worktree` creates additional working directories attached to the same repository, each on its own branch, sharing the object database. This enables parallel agents without branch conflicts in one directory.
-- Parallelism moves cost downstream: merge conflicts, duplicated exploration, and review load. Measure cost per merged change, not agent throughput.
+- Parallelism moves cost downstream: merge conflicts, duplicated exploration, and review load. Watch cost per merged change, not agent throughput.
 - VS Code custom agents define a specialized agent with its own instructions, tools, model, and handoffs ([Custom agents](https://code.visualstudio.com/docs/copilot/customization/custom-agents)). The value is role separation and smaller contexts; the risk is orchestration overhead.
 
 ### 4.5 Delivery-level caution
@@ -256,17 +256,17 @@ The principle is public. The talk cannot claim novelty for the insight. This sec
 
 1. **A principle-by-principle transfer map with evidence strength.** Most sources assert the principle; few show which parts transfer, which weaken, and which break.
 2. **Boundary conditions.** Agents have no lived experience, no tacit memory, and a hard context budget. Industry content rarely explores the limits.
-3. **A reproducible measurement protocol for one repository.** Paired trials, multiple runs, cost per successful task, interventions, and rework.
-4. **A staged rollout with counter-evidence.** Baseline, one variable at a time, a failed intervention, and a keep-or-revert rule.
+3. **A monitoring habit for one repository.** Watch correctness, cost, time and human effort in normal work, then make the next small fix.
+4. **A set of independent improvements.** No required order, one change at a time, a stop rule, and a willingness to remove what does not pay.
 5. **A small or medium repository case study.** Spotify is a hyperscale platform; Modal and incident.io are vendor stories.
 
 ---
 
-## 6. Measurement protocol
+## 6. Monitoring signals
 
-### 6.1 Two signals
+In normal work, the useful evidence is what a session leaves behind: whether the change passed, what it cost, how long it took, and what the person had to fix. This section lists the signals worth watching and what they usually mean.
 
-**Agent self-report**
+### 6.1 Agent self-report
 
 Ask the agent, at the end of a session, to describe:
 
@@ -275,44 +275,35 @@ Ask the agent, at the end of a session, to describe:
 - Where it lost time or had to guess.
 - What would have made the task easier.
 
-This is fast and surfaces friction that telemetry misses. It is a proxy, not ground truth.
+This is fast and surfaces friction that logs miss. It is a proxy, not ground truth.
 
-**System and outcome data**
+### 6.2 Signals
 
-- Task success against acceptance checks.
-- Human interventions per task.
-- Steps and tool calls.
-- Input, output, and cached tokens.
-- Cost per successful task.
-- Wall-clock time.
-- Rework after the agent declares done.
-
-### 6.2 The metric set
-
-| Question | Metric |
+| Signal | What to watch |
 |---|---|
-| Did it work? | Pass rate on tests and acceptance checks |
-| Did it need help? | Interventions per task |
-| Was it efficient? | Steps, tokens, wall-clock time |
-| Was it worth it? | Cost per successful task |
-| Was it clean? | Rework, review comments, change failure rate |
-| Was it safe? | Blocked unsafe actions; permission violations |
+| Correctness | Whether the change passes CI and `verify`; edits to protected or generated files; tests weakened or deleted |
+| Tokens | Spend per task against the usual range for that kind of task; repeated reads of the same files |
+| Time | Session length against similar tasks; time spent waiting on a slow check |
+| Human effort | Repeated corrections of the same kind; repair time after "done" |
+| Rework | Commits that follow a "done" report; review comments that repeat |
 
-### 6.3 Protocol
+Read them together. A cheap, fast, wrong session is not an improvement.
 
-1. Freeze the task set and the harness.
-2. Run paired trials: same task with and without the change.
-3. Use at least 3-5 runs per condition.
-4. Report median and spread.
-5. Pre-declare the keep-or-revert rule.
-6. Sanity-check that agents are not passing by weakening tests.
+### 6.3 From signal to fix
+
+1. Notice the signal in a normal working session.
+2. Identify the question the agent had to infer.
+3. Apply the smallest fix that answers it.
+4. Keep watching the same signal.
+
+The fix is usually one of the six areas: a line in AGENTS.md, a script, a skill, a hook, an MCP server, or nothing. Removing a thing that is not used is also a fix.
 
 ### 6.4 Cautions
 
-- **Efficiency is not correctness.** The AGENTS.md efficiency study did not evaluate output quality.
+- **Efficiency is not correctness.** A lower token count with a failing change is a worse outcome.
 - **Self-report is not ground truth.** Agents can report a good session while producing a failing change.
-- **Variance is large.** A single run can mislead in either direction.
-- **Benchmarks can be contaminated.** Prefer recent, private, or repository-specific tasks.
+- **Single sessions mislead.** Look for a pattern across a few sessions before editing anything.
+- **Published results do not transfer.** They come from other repositories, harnesses and task sets.
 - **Delivery metrics can diverge.** DORA and METR show individual gains coexisting with team-level slowdowns.
 
 ---
@@ -323,8 +314,8 @@ This is fast and surfaces friction that telemetry misses. It is a proxy, not gro
 |---|---|---|---|
 | Environment changes outcomes as much as the model | >2x cost for the same model and task across harnesses | High | One company's internal benchmark |
 | Run-to-run cost varies widely | Most expensive run about 2x the cheapest for the same task | High | Single study; demonstrates variance, not an average |
-| A repository-maintained AGENTS.md can reduce effort | -20% output tokens, -20% wall-clock time | Moderate | Small tasks, 10 repos, no correctness evaluation |
-| A generated AGENTS.md can hurt | -0.5% to -2% success, +20% to +23% cost | Moderate | Applies to LLM-generated files |
+| A repository-maintained AGENTS.md can reduce effort | -20% output tokens (mean; median -17%), -20% wall-clock time (mean; median -29%) | Moderate | 10 repos, 124 PRs, small tasks, no correctness evaluation |
+| A generated AGENTS.md can hurt | No detected success change (-0.5 and -2.0 points, not significant), +20% to +23% cost | Moderate | Applies to LLM-generated files; cost increase is significant, success change is not |
 | Most spend is exploration and fixing | About 64% of rounds | High | One agent family; phase labels approximate |
 | Coding-agent adoption is broad | 22%-29% of 128,018 projects | High | Trace-based estimate; likely a lower bound |
 | Experienced developers can be slowed down | 19% longer | High | Early-2025 tools; perception differed |

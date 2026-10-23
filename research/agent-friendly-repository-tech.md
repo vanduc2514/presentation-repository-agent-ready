@@ -2,18 +2,18 @@
 
 Research date: 2026-10-22
 
-Purpose: practical setup guidance for the technologies in the "How" section of [idea.md](./idea.md): AGENTS.md, helpful scripts, MCP, skills, custom agents, hooks, and worktrees. The focus is a repository that coding agents can work in reliably, not a survey of agent products.
+Purpose: practical setup guidance for the six areas in [idea.md](./idea.md): AGENTS.md, helpful scripts, MCP, skills, hooks, and orchestration (custom agents and worktrees). The focus is a repository where coding agents work more effectively, not a survey of agent products.
 
 ---
 
-## 1. Maturity model
+## 1. Levels of setup
 
-Roll out in order. Each level assumes the previous one works.
+These levels describe coverage, not a required sequence. Each level is useful on its own, and later levels assume the earlier ones are stable.
 
 | Level | What it adds | Why |
 |---|---|---|
-| **0. Ad hoc** | Nothing standardized | Results depend on the prompt and the agent's mood |
-| **1. Baseline** | Reproducible setup, one-command verify, consistent structure, short AGENTS.md | Removes the largest sources of friction |
+| **0. Ad hoc** | The repository as it is, nothing standardized | Results depend on the prompt and the agent's mood |
+| **1. Hygiene and instructions** | Reproducible setup, one-command verify, consistent structure, short AGENTS.md | Removes the largest sources of friction |
 | **2. Procedures** | Scripts for setup, test selection, reproduction, scaffolding; project skills | Turns repeated instructions into deterministic actions |
 | **3. Guardrails** | Hooks, permissions, sandboxing | Enforces behavior that must not depend on model compliance |
 | **4. External capability** | MCP servers, only where the repository lacks something | Adds tools without duplicating local files |
@@ -35,23 +35,23 @@ Rule of thumb:
 
 ## 2. Decision matrix
 
-| Technology | Problem it solves | Setup effort | Context cost | Risk | Evidence | Use when |
-|---|---|---|---|---|---|---|
-| **Baseline hygiene** | Non-reproducible setup, slow feedback | Medium | None | Low | Strong | Always |
-| **AGENTS.md** | Agent does not know commands, conventions, boundaries | Low | Low if short | Low | Mixed | Always, kept short |
-| **Scripts** | Repeated exploration and manual commands | Medium | Low | Low | Moderate | A procedure repeats |
-| **Skills** | Reusable procedures and domain knowledge | Low-medium | Low, progressive | Low-medium | Moderate | A procedure repeats and needs detail |
-| **Hooks** | Behavior that must be deterministic | Medium | None | Medium | Strong mechanism | Safety or formatting must be enforced |
-| **MCP** | Access to external systems or live data | Medium-high | High | Medium-high | Weak-moderate | The repo cannot provide the capability |
-| **Agents window** | Supervising many sessions across workspaces | Low | None | Medium | Moderate | More than one task runs at a time |
-| **Custom agents** | Role separation and smaller contexts | Medium | Reduces main context | Medium | Moderate | Roles and handoffs repeat |
-| **Worktrees** | Parallel tasks without file conflicts | Low | None | Medium | Strong mechanism | Two or more independent tasks run at once |
+| Technology | Problem it solves | Context cost | Risk | Evidence | Use when |
+|---|---|---|---|---|---|
+| **Hygiene** | Non-reproducible setup, slow feedback | None | Low | Strong | Always |
+| **AGENTS.md** | Agent does not know commands, conventions, boundaries | Low if short | Low | Mixed | Always, kept short |
+| **Scripts** | Repeated exploration and manual commands | Low | Low | Moderate | A procedure repeats |
+| **Skills** | Reusable procedures and domain knowledge | Low, progressive | Low-medium | Moderate | A procedure repeats and needs detail |
+| **Hooks** | Behavior that must be deterministic | None | Medium | Strong mechanism | Safety or formatting must be enforced |
+| **MCP** | Access to external systems or live data | High | Medium-high | Weak-moderate | The repo cannot provide the capability |
+| **Agents window** | Supervising many sessions across workspaces | None | Medium | Moderate | More than one task runs at a time |
+| **Custom agents** | Role separation and smaller contexts | Reduces main context | Medium | Moderate | Roles and handoffs repeat |
+| **Worktrees** | Parallel tasks without file conflicts | None | Medium | Strong mechanism | Two or more independent tasks run at once |
 
 ---
 
-## 3. Baseline hygiene
+## 3. Hygiene
 
-Do this before adding agent-specific technology.
+Do this before adding agent-specific technology. Hygiene is a prerequisite, not one of the agent-specific areas.
 
 ### 3.1 Reproducible environment
 
@@ -90,7 +90,7 @@ Consistency helps agents find code and helps humans review it. It is the highest
 
 ### 3.4 Fast feedback
 
-Measure and budget the loops:
+Watch and budget the loops:
 
 | Loop | Target |
 |---|---|
@@ -164,7 +164,7 @@ Infrastructure in `infra` (Terraform). Database migrations in `db/migrations`.
 - Another finds LLM-generated context files slightly reduce success while raising cost **20-23%**; developer-written files help only marginally.
 - Practical rule: write it by hand, keep it short, and measure.
 
-### Measure
+### What to watch
 
 - Task success.
 - Output and cached input tokens.
@@ -238,7 +238,7 @@ npm test -- "$1"
 - Databricks found that harness context management drove more than **2x** cost differences, with one harness sending about **3x** less context per turn.
 - A script that replaces ten exploratory tool calls with one deterministic command attacks both problems.
 
-### Measure
+### What to watch
 
 - Steps per task.
 - Failed commands per task.
@@ -310,11 +310,11 @@ If the tool never loads or is never called, remove the server.
 - Keep credentials out of configuration files. Use the supported authentication and secret mechanisms.
 - Limit the number of tools. Unused tools add context and attack surface.
 
-### Measure
+### What to watch
 
 - Tool call rate per task.
 - Load failures and timeouts.
-- Steps and cost with and without the server.
+- Steps and cost on sessions where the server is used.
 - Whether the agent used the server or a local alternative.
 
 ---
@@ -382,10 +382,10 @@ Return the failing test path, the observed failure, and the root cause.
 - `disable-model-invocation: true` for on-demand skills only.
 - Both disable the skill.
 
-### Measure
+### What to watch
 
 - Invocation rate on relevant tasks.
-- Task success with and without the skill.
+- Task success on sessions where the skill is invoked.
 - Steps and context tokens.
 - Whether the agent follows the procedure or improvises.
 
@@ -393,7 +393,9 @@ Return the failing test path, the observed failure, and the root cause.
 
 ## 8. Orchestration: the Agents window and custom agents
 
-Orchestration has two parts:
+Orchestration is a workflow change, not a repository change. Nothing in the checkout changes; what changes is how a person runs, sees and reviews the agents.
+
+It has two parts:
 
 - **A surface** to run, monitor, and review many sessions: the VS Code **Agents window**.
 - **Roles** that define how each agent behaves: custom agents, subagents, and handoffs.
@@ -597,9 +599,9 @@ handoffs:
 - In the Agents window, verify the isolation mode and permission level before starting a session. Worktree sessions do not prompt for approval.
 - Do not scale to many parallel sessions until one session consistently passes `verify`.
 
-### 8.6 Measure
+### 8.6 What to watch
 
-Session and orchestration metrics:
+Session and orchestration signals:
 
 - Sessions that end with `verify` passing, as a share of all sessions.
 - Human review minutes per session.
@@ -676,7 +678,7 @@ A command hook receives event data as JSON on stdin and returns one JSON object 
 - Hooks do not replace permissions, sandboxing, or enterprise controls.
 - Start with an audit hook that records tool names, not arguments or results.
 
-### Measure
+### What to watch
 
 - Unsafe actions blocked.
 - Rework after the agent declares done.
@@ -724,9 +726,9 @@ Open each worktree as a separate VS Code window. Run one agent per worktree.
 - Name branches and directories predictably: `feat/auth`, `fix/api-timeout`.
 - Remove worktrees when merged; prune stale entries.
 - Do not run two agents in the same worktree.
-- Measure cost per merged change, not agent throughput.
+- Watch cost per merged change, not agent throughput.
 
-### Measure
+### What to watch
 
 - Wall-clock time to merge.
 - Merge conflicts per change.
@@ -819,11 +821,11 @@ Start with the first four items. Add MCP only after a demonstrated gap. Add cust
 
 ---
 
-## 13. Rollout order and checkpoints
+## 13. Steps and checkpoints
 
 | Step | Change | Checkpoint |
 |---|---|---|
-| 0 | Baseline: runtime pin, lockfile, `verify`, fast tests | `verify` passes from a clean clone |
+| 0 | Hygiene: runtime pin, lockfile, `verify`, fast tests | `verify` passes from a clean clone |
 | 1 | AGENTS.md | Same task: fewer failed commands, lower tokens, no success drop |
 | 2 | Scripts | Fewer steps per task; time to first passing test drops |
 | 3 | Skills | Skill is invoked on relevant prompts; success improves or stays flat |
@@ -833,7 +835,7 @@ Start with the first four items. Add MCP only after a demonstrated gap. Add cust
 | 7 | Custom agents | Main context shrinks; review findings and cost improve |
 | 8 | Worktrees | Time to merge drops; conflicts and review load stay manageable |
 
-At every step: change one variable, run paired trials, report median and spread, and keep or revert.
+There is no required order; the list is a way to check coverage. At every step: change one thing, watch the same signals for a few sessions, keep what helps, and remove what does not.
 
 ---
 
@@ -845,7 +847,7 @@ At every step: change one variable, run paired trials, report median and spread,
 - Adding many tools and skills without checking whether they are invoked.
 - Hooks that fail silently or block everything.
 - Running parallel agents without port, dependency, and database isolation.
-- Orchestrating agents before the single-agent baseline is stable.
+- Orchestrating agents before a single agent runs reliably.
 - Treating the Agents window as a dashboard to admire instead of a review queue.
 - Starting worktree sessions and forgetting that they skip manual approvals.
 - Measuring tokens saved instead of cost per successful task.
@@ -854,18 +856,18 @@ At every step: change one variable, run paired trials, report median and spread,
 
 ---
 
-## 15. Measurement per technology
+## 15. Monitoring signals per technology
 
-| Technology | Primary metrics |
+| Technology | Signals to watch |
 |---|---|
-| Baseline | Time to first passing test; clean-clone setup success |
-| AGENTS.md | Success rate; output tokens; failed commands; wall-clock time |
-| Scripts | Steps per task; time to first passing test; context tokens |
-| Skills | Invocation rate; success rate; steps; context tokens |
-| Hooks | Unsafe actions blocked; rework; latency; silent failures |
-| MCP | Tool call rate; load failures; steps; cost per successful task |
-| Agents window | Sessions ending with `verify` passing; review minutes per session; rework after done; share merged without follow-up |
-| Custom agents | Main-context tokens; handoff rate; review findings; cost |
+| Hygiene | Whether a clean clone sets up; time to the first passing test |
+| AGENTS.md | Failed commands; output tokens; time to completion; whether changes pass `verify` |
+| Scripts | Failed commands per task; time to first passing test; context tokens |
+| Skills | Whether the skill is invoked; whether changes pass `verify`; steps |
+| Hooks | Unsafe actions blocked; rework after done; hook latency; silent failures |
+| MCP | Whether the tool is called; load failures; steps; cost |
+| Agents window | Sessions ending with `verify` passing; review minutes; rework; merged without follow-up |
+| Custom agents | Main-context tokens; handoffs; review findings; cost |
 | Worktrees | Time to merge; conflicts; review load; cost per merged change |
 
 ---
