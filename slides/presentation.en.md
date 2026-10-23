@@ -67,20 +67,6 @@ This is the core mechanism that the rest of the talk builds on. This argument is
 
 ------
 
-<!--slide-attr x=7200 y=0 rotate=2 scale=1.0 -->
-
-# Optimize the Working Environment, Not the Model
-
-- Does not make the model smarter, but frees it from repetitive guesswork
-- The model becomes far more effective when operating in an "ideal" environment
-
-<!-- SPEAKER NOTES
-The model is the same before and after. The only thing that changes is how much of its "budget" (tokens and attention) is spent figuring out the repository versus actually completing the task.
-This talk is not about switching to a better model or learning prompt hacks — both matter, but neither is today's focus. We also do not claim that configuration alone guarantees the agent will always be correct. This is not a formal measurement study, nor a mandatory checklist to install everything. Several areas are situational, and some are entirely optional.
--->
-
-------
-
 <!--slide-attr x=1800 y=1300 rotate=-2 scale=1.0 -->
 
 # Techniques to Optimize the Agent Environment
@@ -92,7 +78,8 @@ This talk is not about switching to a better model or learning prompt hacks — 
 | Skills | When a procedure repeats and requires detailed step-by-step guidance |
 | Hooks | When the agent risks modifying protected or sensitive areas |
 | MCP | When required information lives outside the checkout |
-| Orchestration | When review, not code generation, is the bottleneck |
+| Isolation | When running parallel agents or PRs become too large to review |
+| Orchestration | When coordinating and supervising multiple agents is the bottleneck |
 
 <!-- SPEAKER NOTES
 This is a map from common friction points to solution areas, along with triggers for when to implement each. There is no mandatory order.
@@ -105,6 +92,10 @@ The first four areas are files contained entirely within the checkout. MCP is a 
 <!--slide-attr x=3600 y=1300 rotate=2 scale=1.0 -->
 
 # AGENTS.md
+
+- Clear, structured rules covering conventions, context, project layout, and boundaries
+- Write by hand, not auto-generated: generated context files inflate token costs without improving accuracy
+- Optimize context budget: retain only essential information, avoid duplicating READMEs or architecture essays
 
 ![Screenshot: AGENTS.md alongside the session that consumed it.](images/placeholder-agents-md.svg)
 
@@ -123,7 +114,7 @@ Crucial advice: write it by hand. Auto-generating context files often inflates c
 
 - One clear command per intent: `setup`, `verify`, `test-one <path>`, `reproduce <issue>`
 - Non-interactive, predictable exit codes, bounded output, fail-fast
-- Support `--json` flag when structured data helps, disable color when not a TTY
+- Support `--json` flag when structured data helps
 
 ![Comparison image: verify command failing on the left, passing on the right.](images/placeholder-scripts.svg)
 
@@ -161,8 +152,7 @@ Only package a skill when the same procedure repeats across multiple tasks and r
 
 - Commands triggered automatically by harness events, independent of the model
 - Event lifecycle in Copilot: `preToolUse`, `postToolUse`, `sessionStart`, `sessionEnd`
-- Start gently with an audit hook: log invoked tool names only
-- Once data is gathered, enforce guardrails on sensitive paths or error-prone commands
+- A double-edged sword: misconfigured blocking can send misleading signals to the model, requiring testing and monitoring
 
 ![Screenshot: An edit blocked by a hook and the feedback message received by the agent.](images/placeholder-hooks.svg)
 
@@ -182,7 +172,7 @@ A common anti-pattern to avoid: hooks that over-block everything, or hooks that 
 - Run servers providing data the checkout lacks: issues, CI logs, databases
 - Highest context cost of all areas: tool schemas and outputs both enter the session
 - Always prefer local scripts whenever a script can do the job
-- Verify the tool is actually invoked by the agent before keeping the server around
+- Verify whether the tool is actually invoked by the agent
 
 ![Screenshot: An MCP tool call and its output returned directly in the session.](images/placeholder-mcp.svg)
 
@@ -195,21 +185,37 @@ However, if the answer does not strictly live outside the checkout, adding an MC
 
 <!--slide-attr x=5400 y=2600 rotate=1 scale=1.0 -->
 
+# Isolation
+
+- Leverage Git worktrees: each parallel task gets an isolated checkout, port, and database
+- Use stacked PRs to break pull requests into small, reviewable pieces
+- Eliminate review fatigue: transform massive agent-generated diffs into atomic, dependent PRs
+- Fully isolate dependencies and environment variables across sessions to avoid resource collisions
+
+![Screenshot: Isolated parallel environments with Git worktrees and stacked PRs.](images/placeholder-isolation.svg)
+
+<!-- SPEAKER NOTES
+When scaling coding agents, the two biggest bottlenecks are local resource collisions and massive PRs.
+Git worktrees solve the environment challenge: each agent operates in its own directory checkout, with dedicated ports and test databases, preventing overlapping interference.
+Paired with this is the practice of stacked PRs (stacked diffs popularized by tools like Graphite and Meta): instead of letting an agent dump a monolithic 1,000-line PR that overwhelms reviewers, we steer agents to output a series of small, dependent PRs (e.g., PR 1: DB schema, PR 2: API endpoints, PR 3: UI component). Reviewers can verify each piece rapidly without blocking development.
+-->
+
+------
+
+<!--slide-attr x=7200 y=2600 rotate=-1 scale=1.0 -->
+
 # Orchestration
 
 - Tooling to help engineers steer and manage multiple agents concurrently
-- Does not modify the repository: all code in the checkout remains unchanged
 - Cost is human attention, not model context
-- Leverage Git worktrees: each parallel task gets an isolated checkout, port, and database
-- Scale to multiple sessions only after a single-session run reliably passes `verify`
+- Avoid blind reviews: centralized interface to monitor diffs, terminal outputs, and agent progress
 
 ![Screenshot: Two concurrent sessions side by side with visible file changes (Agents view in VS Code).](images/placeholder-orchestration.svg)
 
 <!-- SPEAKER NOTES
-Orchestration prevents "blind reviews" when running multiple sessions simultaneously. It is only worth investing in when your bottleneck is code review, not code generation.
-It acts as an amplifier: whatever strengths or weaknesses your repository has, orchestration multiplies them. The Agents view shown is currently in Preview in VS Code, presented for your future reference. Other harnesses follow similar patterns under different names.
-Custom agents and subagents define specialized roles: planner, implementer, reviewer, researcher. Review and research agents should strictly receive read-only tools.
-Two critical reminders: worktree sessions often operate with broad permissions, making sandboxing and guardrail hooks even more essential. If multiple sessions report "done" while tests fail en masse, the problem lies in the repository setup, not the model.
+Orchestration is the surface and coordination tooling (such as the Agents view in VS Code). It is only worth investing in when your team's bottleneck is code review, not code generation.
+Orchestration acts as an amplifier: whatever strengths or weaknesses your repository has, it multiplies them.
+When setting up custom agents and subagents, we define specialized roles: planner, implementer, reviewer, and researcher. Crucially, review and research agents should strictly receive read-only tools to maintain guardrails.
 -->
 
 ------
@@ -272,17 +278,18 @@ If sessions in your own repository do not become smoother or more effective afte
 
 # References
 
+- [AGENTS.md Specification](https://agents.md)
+- [Agent Skills Specification](https://agentskills.io)
+- [Model Context Protocol Specification](https://modelcontextprotocol.io)
+- VS Code, [The Agents Window](https://code.visualstudio.com/docs/agents/run/agents-window)
 - Lulla et al., [On the Impact of AGENTS.md Files on the Efficiency of AI Coding Agents](https://arxiv.org/html/2601.20404v2)
-- Gloaguen et al., [Evaluating AGENTS.md](https://arxiv.org/abs/2602.11988)
 - [How Do AI Agents Spend Your Money?](https://arxiv.org/html/2604.22750v3)
 - METR, [Measuring the Impact of Early-2025 AI on Experienced Developer Productivity](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study)
-- Google Cloud, [DORA 2024 report](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report)
 - Spotify, [Coding Is No Longer the Constraint](https://engineering.atspotify.com/2026/6/code-with-claude-coding-is-no-longer-the-constraint)
-- Modal, [Agents need good developer experience too](https://modal.com/blog/agents-devex)
 - incident.io, [DevEx matters for coding agents, too](https://incident.io/blog/ai-developer-tools)
 
 <!-- SPEAKER NOTES
-Notable research papers and engineering analyses from teams at Spotify, Modal, incident.io, and AI research organizations. Follow the links directly on the slide to read the original publications.
+Core technical specifications (AGENTS.md, Agent Skills, MCP, VS Code Agents) alongside notable research papers and real-world engineering analyses from teams at Spotify, incident.io, and AI research organizations. Follow the links directly on the slide to read the original publications.
 -->
 
 ------

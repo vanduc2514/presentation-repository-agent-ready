@@ -67,20 +67,6 @@ Một đồng nghiệp mới vào team sẽ tích lũy hiểu biết dần qua t
 
 ------
 
-<!--slide-attr x=7200 y=0 rotate=2 scale=1.0 -->
-
-# Tối ưu môi trường làm việc thay vì đổi model
-
-- Không làm model thông minh hơn, mà giải phóng nó khỏi những việc phải mò mẫm lặp đi lặp lại
-- Model sẽ hiệu quả hơn khi làm việc trong một môi trường "lý tưởng"
-
-<!-- SPEAKER NOTES
-Model trước hay sau khi tối ưu vẫn là một. Thứ thay đổi duy nhất là: bao nhiêu phần trong "ngân sách" (token và sự chú ý) của nó bị tiêu tốn cho việc tìm hiểu repo, và bao nhiêu được dành trọn vẹn để giải quyết task.
-Buổi chia sẻ này không bàn về: đổi sang model xịn hơn hay học mẹo viết prompt hay hơn — cả hai điều đó đều quan trọng nhưng không phải trọng tâm hôm nay. Chúng ta cũng không khẳng định rằng cứ thiết lập xong là agent sẽ luôn chạy đúng. Đây không phải một bài nghiên cứu đo đạc số liệu, càng không phải bảng checklist bắt bạn phải cài đặt mọi thứ. Một vài hạng mục chỉ nên áp dụng khi có điều kiện phát sinh, và có những thứ hoàn toàn là tùy chọn.
--->
-
-------
-
 <!--slide-attr x=1800 y=1300 rotate=-2 scale=1.0 -->
 
 # Các kỹ thuật để tối ưu môi trường cho agent
@@ -92,7 +78,8 @@ Buổi chia sẻ này không bàn về: đổi sang model xịn hơn hay học m
 | Skills | Khi quy trình vừa lặp lại, vừa cần hướng dẫn chi tiết từng bước |
 | Hooks | Khi có nguy cơ agent chạm vào những vùng không được phép sửa |
 | MCP | Khi thông tin cần thiết nằm ngoài phạm vi checkout |
-| Orchestration | Khi điểm nghẽn nằm ở khâu review chứ không phải khâu sinh code |
+| Isolation | Khi chạy agent song song hoặc PR quá lớn gây nghẽn review |
+| Orchestration | Khi điểm nghẽn nằm ở khâu điều phối và giám sát nhiều agent |
 
 <!-- SPEAKER NOTES
 Đây là bản đồ ánh xạ từ 6 câu hỏi ở slide trước sang từng hạng mục giải pháp, kèm theo điều kiện khi nào thì nên triển khai. Không hề có một thứ tự bắt buộc nào ở đây.
@@ -105,6 +92,10 @@ Bốn hạng mục đầu tiên là các file nằm gọn trong checkout. MCP l�
 <!--slide-attr x=3600 y=1300 rotate=2 scale=1.0 -->
 
 # AGENTS.md
+
+- Bao gồm những quy tắc với cấu trúc rõ ràng về conventions, bối cảnh, cấu trúc dự án, ...
+- Tự tay viết thay vì auto-gen: context file tự sinh chỉ làm đội chi phí token mà không tăng độ chính xác
+- Tối ưu context budget: chỉ giữ lại thông tin cốt lõi, tránh biến thành bản sao dài dòng của README
 
 ![Ảnh chụp: AGENTS.md bên cạnh session đã dùng nó.](images/placeholder-agents-md.svg)
 
@@ -123,7 +114,7 @@ Về chi phí context: mỗi session agent sẽ phải đọc file này, nên h�
 
 - Mỗi mục đích một lệnh rõ ràng: `setup`, `verify`, `test-one <path>`, `reproduce <issue>`
 - Chạy không tương tác (non-interactive), exit code chuẩn xác, giới hạn lượng output, fail-fast
-- Hỗ trợ cờ `--json` khi cần dữ liệu có cấu trúc, tự tắt màu khi output không phải TTY
+- Hỗ trợ cờ `--json` khi cần dữ liệu có cấu trúc
 
 ![Ảnh so sánh: Lệnh verify khi thất bại bên trái, thành công bên phải.](images/placeholder-scripts.svg)
 
@@ -161,8 +152,7 @@ Chỉ nên đóng gói skill khi cùng một quy trình lặp đi lặp lại qu
 
 - Câu lệnh kích hoạt tự động theo sự kiện của harness, không phụ thuộc vào model
 - Vòng đời sự kiện trong Copilot: `preToolUse`, `postToolUse`, `sessionStart`, `sessionEnd`
-- Bắt đầu nhẹ nhàng bằng audit hook: chỉ ghi log lại tên các tools được gọi
-- Khi đã có dữ liệu, mới siết chặt rào chắn (enforce) ở những paths và câu lệnh nhạy cảm hoặc dễ gây lỗi
+- Con dao hai lưỡi: có thể phát tín hiệu nhầm khiến model bị rối, cần kiểm thử và theo dõi sát sao
 
 ![Ảnh chụp: Một thao tác sửa file bị hook chặn lại và thông báo phản hồi mà agent nhận được.](images/placeholder-hooks.svg)
 
@@ -182,7 +172,7 @@ Một anti-pattern rất hay gặp cần tránh: viết hook chặn quá đà m�
 - Dựng server cung cấp những dữ liệu mà checkout không có: issues, CI logs, database
 - Tốn context nhất trong cả 6 hạng mục: cả định nghĩa tool lẫn output trả về đều đổ vào session
 - Luôn ưu tiên dùng script nội bộ (local script) nếu script tự giải quyết được
-- Kiểm tra thực tế xem tool có thực sự được agent gọi hay không trước khi quyết định duy trì server
+- Kiểm tra thực tế xem tool có thực sự được agent gọi hay không
 
 ![Ảnh chụp: Một lượt gọi tool qua MCP và kết quả trả về ngay trong session.](images/placeholder-mcp.svg)
 
@@ -195,21 +185,37 @@ Tuy nhiên, nếu câu trả lời không nhất thiết phải nằm ngoài che
 
 <!--slide-attr x=5400 y=2600 rotate=1 scale=1.0 -->
 
+# Isolation
+
+- Tận dụng Git worktree: mỗi task chạy song song một checkout riêng, tách biệt port và database
+- Sử dụng PR stack để chia pull request thành nhiều phần nhỏ cho dễ review
+- Tránh "quá tải review": biến code đồ sộ do agent sinh ra thành chuỗi PR nhỏ, tuần tự và độc lập
+- Cô lập hoàn toàn dependencies và biến môi trường giữa các session để tránh đụng độ tài nguyên
+
+![Ảnh chụp: Môi trường chạy song song độc lập với Git worktree và mô hình PR stack.](images/placeholder-isolation.svg)
+
+<!-- SPEAKER NOTES
+Khi làm việc với coding agent, hai rào cản lớn nhất khi mở rộng quy mô là: đụng độ tài nguyên local và PR quá khổng lồ.
+Git worktree giải quyết bài toán môi trường: mỗi agent chạy trên một thư mục checkout riêng biệt, có port riêng và database test riêng, không giẫm chân lên nhau.
+Kèm theo đó là kỹ thuật PR stack (stacked PRs / stacked diffs như cách tiếp cận của Graphite hay Meta): thay vì để agent xả ra một PR khổng lồ cả nghìn dòng làm reviewer "choáng ngợp", chúng ta định hướng agent chia nhỏ thành chuỗi các PR nhỏ phụ thuộc nhau (ví dụ: PR 1 - DB schema, PR 2 - API endpoint, PR 3 - UI component). Nhờ đó, người review duyệt từng phần cực nhanh, dễ kiểm soát và không bị nghẽn tiến độ.
+-->
+
+------
+
+<!--slide-attr x=7200 y=2600 rotate=-1 scale=1.0 -->
+
 # Orchestration
 
-- Bộ công cụ giúp lập trình viên quản lý và điều phối nhiều agent cùng lúc
-- Không làm thay đổi repository: toàn bộ code trong checkout vẫn giữ nguyên
+- Bộ công cụ giúp lập trình viên quản lý, điều phối và định hướng nhiều agent cùng lúc
 - Chi phí đánh đổi ở đây là sự tập trung của con người, chứ không phải context của model
-- Tận dụng Git worktree: mỗi task chạy song song một checkout riêng, tách biệt port và database
-- Chỉ mở rộng ra nhiều session khi quy trình chạy đơn lẻ với một session đã vượt qua lệnh `verify` ổn định
+- Tránh review mù: giao diện tập trung để theo dõi diff, terminal và tiến độ của từng agent
 
 ![Ảnh chụp: Hai session chạy song song kèm danh sách file thay đổi (giao diện Agents trong VS Code).](images/placeholder-orchestration.svg)
 
 <!-- SPEAKER NOTES
-Orchestration giúp chúng ta tránh rơi vào tình trạng "review mù" khi có quá nhiều session chạy cùng lúc. Nó chỉ thật sự đáng đầu tư khi điểm nghẽn của bạn nằm ở khâu review code chứ không phải khâu sinh code.
-Nó đóng vai trò khuếch đại: repo của bạn đang có ưu điểm hay nhược điểm gì, nó sẽ nhân bản lên bấy nhiêu lần. Cửa sổ Agents trong hình hiện đang ở bản Preview của VS Code, mang tính giới thiệu để các bạn tham khảo thử sau này. Các harness khác trên thị trường cũng có cách làm tương tự với những tên gọi khác nhau.
-Khi thiết lập custom agent và subagents, chúng ta thường chia theo các vai trò chuyên biệt: lên kế hoạch (planner), viết code (implementer), review (reviewer), hay nghiên cứu (researcher). Đặc biệt, các agent làm nhiệm vụ review và research chỉ nên được cấp tools chỉ đọc (read-only tools).
-Hai lưu ý quan trọng: các session chạy trên worktree thường được cấp quyền thao tác khá rộng, vì vậy sandbox và hook bảo vệ lại càng trở nên cần thiết. Nếu nhiều session cùng lúc báo "đã xong" nhưng test vẫn fail hàng loạt, thì vấn đề nằm ở repo của bạn, chứ không phải do model kém.
+Orchestration là phần giao diện và công cụ điều phối (ví dụ như cửa sổ Agents trong VS Code). Nó chỉ thật sự đáng đầu tư khi điểm nghẽn của team bạn nằm ở khâu review code chứ không phải khâu sinh code.
+Orchestration đóng vai trò khuếch đại: repo của bạn đang có ưu điểm hay nhược điểm gì, nó sẽ nhân bản lên bấy nhiêu lần.
+Khi thiết lập custom agent và subagents, chúng ta phân chia vai trò chuyên biệt: lên kế hoạch (planner), viết code (implementer), review (reviewer), và nghiên cứu (researcher). Đặc biệt, các agent review và research chỉ nên được cấp tools chỉ đọc (read-only tools) để đảm bảo an toàn.
 -->
 
 ------
@@ -272,17 +278,18 @@ Nếu sau khi bạn thay đổi repo mà các session không hề bớt nghẽn 
 
 # Tài liệu tham khảo
 
+- [AGENTS.md Specification](https://agents.md)
+- [Agent Skills Specification](https://agentskills.io)
+- [Model Context Protocol Specification](https://modelcontextprotocol.io)
+- VS Code, [The Agents Window](https://code.visualstudio.com/docs/agents/run/agents-window)
 - Lulla et al., [On the Impact of AGENTS.md Files on the Efficiency of AI Coding Agents](https://arxiv.org/html/2601.20404v2)
-- Gloaguen et al., [Evaluating AGENTS.md](https://arxiv.org/abs/2602.11988)
 - [How Do AI Agents Spend Your Money?](https://arxiv.org/html/2604.22750v3)
 - METR, [Measuring the Impact of Early-2025 AI on Experienced Developer Productivity](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study)
-- Google Cloud, [Báo cáo DORA 2024](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report)
 - Spotify, [Coding Is No Longer the Constraint](https://engineering.atspotify.com/2026/6/code-with-claude-coding-is-no-longer-the-constraint)
-- Modal, [Agents need good developer experience too](https://modal.com/blog/agents-devex)
 - incident.io, [DevEx matters for coding agents, too](https://incident.io/blog/ai-developer-tools)
 
 <!-- SPEAKER NOTES
-Các bài báo khoa học và bài phân tích kỹ thuật tiêu biểu từ các nhóm kỹ sư tại Spotify, Modal, incident.io và các tổ chức nghiên cứu AI. Mọi người có thể nhấp trực tiếp vào từng liên kết trên slide để đọc bài viết gốc.
+Các tiêu chuẩn kỹ thuật cốt lõi (AGENTS.md, Agent Skills, MCP, VS Code Agents) cùng các bài báo khoa học và phân tích kỹ thuật thực tế từ Spotify, incident.io và các tổ chức nghiên cứu AI. Mọi người có thể nhấp trực tiếp vào từng liên kết trên slide để đọc bài viết gốc.
 -->
 
 ------
