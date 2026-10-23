@@ -203,6 +203,53 @@ body {
   cursor: pointer;
 }
 
+/* ── TEXT + IMAGE SLIDES: text left, image right ───────────────────── */
+.step:has(> p > img) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  align-content: stretch;
+  justify-content: normal;
+  column-gap: clamp(1.5rem, 3vw, 3rem);
+  row-gap: 0.2rem;
+}
+
+.step:has(> p > img) > * {
+  grid-column: 1;
+  min-width: 0;
+}
+
+.step:has(> p > img) > p:has(> img) {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  align-self: center;
+  justify-self: center;
+  margin: 0;
+  max-width: 100%;
+}
+
+.step:has(> p > img) > p:has(> img) img {
+  display: block;
+  width: 100%;
+  max-height: min(56vh, 460px);
+  object-fit: contain;
+}
+
+@media (max-width: 900px) {
+  .step:has(> p > img) {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+  }
+  .step:has(> p > img) > p:has(> img) {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 1rem;
+  }
+  .step:has(> p > img) > p:has(> img) img {
+    max-height: 40vh;
+  }
+}
+
 @media (max-width: 900px) {
   .step {
     width: 90vw;
