@@ -1,76 +1,72 @@
-# Presentation Template (Mẫu Trình Chiếu)
+# Xây dựng repository thân thiện với agent
 
 [![en](https://img.shields.io/badge/lang-en-blue.svg)](README.md)
 
-Một mẫu để xây dựng **bài trình chiếu impress.js** từ Markdown — viết slide trong `.md`, nhận file HTML độc lập và triển khai lên GitHub Pages tự động.
+Buổi chia sẻ về những tinh chỉnh nhỏ trong repository giúp coding agent làm việc hiệu quả hơn: `AGENTS.md`, scripts, skills, hooks, MCP, isolation và orchestration. Trình bày tại **Codegym Tech Talk** bởi Nguyễn Văn Đức.
 
-Được phát triển dựa trên [markpress](https://github.com/davidecaminati/markpress).
+Slide: [vanduc2514.github.io/presentation-repository-agent-ready](https://vanduc2514.github.io/presentation-repository-agent-ready/) · Bản tiếng Việt: [index.vi.html](https://vanduc2514.github.io/presentation-repository-agent-ready/index.vi.html)
 
-## Sử dụng Mẫu Này
+## Bối cảnh
 
-1. Nhấn **Use this template** → **Create a new repository**
-2. Clone repository mới
-3. Cài đặt dependencies
-4. Bắt đầu viết slide
+Coding agent vốn dĩ đã làm việc được trên một repository bình thường. Nó đọc file, chạy lệnh, sửa code và báo cáo lại; với một thay đổi nhỏ ở local, nó thường thành công mà không cần thiết lập gì đặc biệt. Vấn đề không phải là nó không chạy được, mà là nó lãng phí bao nhiêu công sức để tự tìm hiểu lại những gì repository đã biết.
+
+Mỗi câu hỏi không được trả lời sẽ trở thành một phép suy đoán: lệnh nào chạy test, tầng nào xử lý validation, những đường dẫn nào không được chạm vào. Suy đoán tốn token, tốn thời gian và làm giảm độ chính xác. Buổi chia sẻ gọi đây là những điểm ma sát và xem việc cấu hình repository là cách loại bỏ chúng, không phải cách làm model thông minh hơn.
+
+Khán giả: sinh viên và lập trình viên mới đi làm, những người đã dùng coding agent và không ít lần thấy nó gặp lỗi khó hiểu. Hình thức: thuyết trình, không live demo, nên không cần cài đặt gì để theo dõi.
+
+## Nội dung trình bày
+
+| # | Chủ đề | Mô tả |
+|---|--------|-------|
+| 1 | Những "biểu hiện lạ" thường gặp khi sử dụng Agent | Code nhìn qua tưởng đúng nhưng lỗi khi deploy, sửa vào file generated, session cần can thiệp liên tục, chi phí token không tương xứng với thay đổi |
+| 2 | Vì sao lại có những biểu hiện này? | Agent bắt đầu mỗi session mà không có hình dung về repository; câu hỏi không được trả lời sẽ thành phép đoán |
+| 3 | Các kỹ thuật để tối ưu môi trường cho agent | Tổng quan bảy hạng mục và thời điểm nên áp dụng từng hạng mục |
+| 4 | AGENTS.md | Một file ngắn do con người viết: lệnh chạy, quy ước, ranh giới cấm chạm và tiêu chuẩn hoàn thành |
+| 5 | Scripts | Mỗi mục đích một lệnh, không tương tác, exit code ổn định, output có giới hạn |
+| 6 | Skills | Quy trình lặp lại được đóng gói với cơ chế nạp lũy tiến, chỉ đọc phần chi tiết khi thật sự cần |
+| 7 | Hooks | Ép buộc quy tắc theo sự kiện của harness, không phụ thuộc vào việc model có đọc hay không |
+| 8 | MCP | Đưa vào những dữ liệu nằm ngoài checkout, với chi phí context cao nhất trong bảy hạng mục |
+| 9 | Isolation | Git worktree cho mỗi task song song, kết hợp PR stack để giữ review ở quy mô nhỏ |
+| 10 | Orchestration | Điều phối nhiều agent cùng lúc; chỉ đáng đầu tư khi nút thắt nằm ở review chứ không phải sinh code |
+| 11 | Những sai lầm phổ biến (Anti-patterns) | Cài đặt mọi thứ trước khi biết ma sát ở đâu, tự sinh context file, viết hướng dẫn quá dài, hook chặn quá mức |
+| 12 | DevEx: Từ lập trình viên đến coding agent | Mọi cải thiện giúp con người làm việc tốt hơn đều ánh xạ sang môi trường agent cần |
+| 13 | Take Aways | Nên bắt đầu từ đâu và làm sao biết nó có tác dụng |
+
+## Render
 
 ```sh
 npm install
-npm run build      # → output/index.html
-npm run preview    # mở trong trình duyệt
+npm run build      # render cả hai ngôn ngữ vào output/
+npm run preview    # mở output/index.html trên trình duyệt
 ```
 
-Yêu cầu Node.js 20. Nếu bạn dùng [mise](https://mise.jdx.dev/), chạy `mise install` trước.
+Yêu cầu Node.js 20 (được pin trong `mise.toml`). Chạy `mise install` trước nếu bạn dùng mise.
 
-## Cấu trúc Dự án
+| File | Ngôn ngữ |
+|---|---|
+| `output/index.html` | Tiếng Anh (mặc định) |
+| `output/index.vi.html` | Tiếng Việt |
+
+Cả hai file đều có nút chuyển ngôn ngữ nổi, dẫn tới phiên bản còn lại.
+
+## Điều khiển từ điện thoại
+
+Bản trình bày có kèm remote control. Mở `output/remote.html` trên điện thoại để điều khiển việc chuyển slide và đọc speaker notes theo thời gian thực qua relay ntfy.sh.
+
+## Cấu trúc dự án
 
 ```
 slides/
-  presentation.en.md  # nguồn slide tiếng Anh
-  presentation.vi.md  # nguồn slide tiếng Việt
-  images/             # hình ảnh được tham chiếu trong slide
-build.cjs             # script build — tùy chỉnh theme tại đây
-package.json
-mise.toml             # định phiên bản Node.js
-.github/
-  workflows/
-    deploy-pages.yml  # tự động triển khai lên GitHub Pages khi push lên main
-.agents/
-  skills/             # kỹ năng AI agent cho viết và tạo kiểu slide
-research/             # ghi chú brainstorm và nghiên cứu
-scripts/              # script tiện ích (ví dụ: generate-pdf.cjs)
+  presentation.en.md  # nội dung slide tiếng Anh
+  presentation.vi.md  # nội dung slide tiếng Việt
+  images/             # ảnh chụp và mã QR dùng trong slide
+build.cjs             # script build và xử lý hậu kỳ slide
+public/
+  presentation/       # presentation.css và presentation.js
+  remote/             # remote control trên điện thoại
+.github/workflows/
+  deploy-pages.yml    # deploy lên GitHub Pages mỗi khi push vào main
+.agents/skills/       # agent skills cho nội dung, style và release notes
 ```
 
-## Tùy chỉnh
-
-### Thay đổi tiêu đề trình chiếu
-
-Chỉnh sửa block `<!--markpress-opt-->` ở đầu `slides/presentation.en.md` (và block tương ứng trong `slides/presentation.vi.md`):
-
-```markdown
-<!--markpress-opt
-{
-  "autoSplit": false,
-  "sanitize": false,
-  "title": "Tiêu đề Trình chiếu của Bạn"
-}
-markpress-opt-->
-```
-
-### Màu sắc, phông chữ và bố cục
-
-Tất cả chủ đề (bảng màu, phông chữ, vị trí slide, biến CSS) được thực hiện trong `build.cjs`.
-
-Xem [`.agents/skills/markpress-styling/SKILL.md`](.agents/skills/markpress-styling/SKILL.md) để tham khảo đầy đủ.
-
-## GitHub Pages
-
-Workflow đi kèm (`deploy-pages.yml`) sẽ build và triển khai mỗi khi push lên `main`.
-
-Bật GitHub Pages trong repository của bạn:
-- **Settings** → **Pages** → **Source**: `GitHub Actions`
-
-## Viết Slide
-
-Slide được viết trong `slides/presentation.en.md` (tiếng Anh) và `slides/presentation.vi.md` (tiếng Việt), phân cách bằng `------` (sáu dấu gạch ngang).
-
-Xem [`.agents/skills/markpress-content/SKILL.md`](.agents/skills/markpress-content/SKILL.md) để được hướng dẫn đầy đủ.
+Phần giao diện nằm trong `public/presentation/presentation.css`; màu nhấn riêng cho từng slide và hiệu ứng chuyển động vào slide là các rule CSS tại đó. Xem [`.agents/skills/markpress-styling/SKILL.md`](.agents/skills/markpress-styling/SKILL.md).

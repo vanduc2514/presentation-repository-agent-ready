@@ -1,25 +1,57 @@
-# Presentation Template
+# Building an Agent-Friendly Repository
 
 [![vi](https://img.shields.io/badge/lang-vi-yellow.svg)](README.vi-VN.md)
 
-A template for building **impress.js presentations** from Markdown — write slides in `.md`, get a self-contained HTML slideshow, and deploy to GitHub Pages automatically.
+A talk on small repository optimizations that make a coding agent work better: `AGENTS.md`, scripts, skills, hooks, MCP, isolation, and orchestration. Delivered at **Codegym Tech Talk** by Nguyen Van Duc.
 
-Powered by [markpress](https://github.com/davidecaminati/markpress).
+Slides: [vanduc2514.github.io/presentation-repository-agent-ready](https://vanduc2514.github.io/presentation-repository-agent-ready/) · Vietnamese: [index.vi.html](https://vanduc2514.github.io/presentation-repository-agent-ready/index.vi.html)
 
-## Use This Template
+## Background
 
-1. Click **Use this template** → **Create a new repository**
-2. Clone your new repository
-3. Install dependencies
-4. Start writing slides
+A coding agent already works in a standard repository. It reads files, runs commands, edits code, and reports back; for a small local change it often succeeds without any special setup. The problem is not that it fails to run, it is how much of its effort is wasted rediscovering what the repository already knows.
+
+Every unanswered question becomes an inference: which command runs the tests, which layer owns validation, which paths are off limits. Inferences cost tokens, time, and correctness. The talk frames these as friction points and treats repository configuration as a way to remove them, not as a way to make the model smarter.
+
+Audience: students and early-career engineers who have used coding agents and watched them fail in ways that were hard to explain. Format: lecture with no live demo, so nothing needs to be installed to follow along.
+
+## Presentation Outline
+
+| # | Topic | Description |
+|---|-------|-------------|
+| 1 | Common "Friction Points" When Using Agents | Symptoms: plausible-looking code that breaks on deploy, edits to generated files, sessions that need constant steering, token spend out of proportion to the change |
+| 2 | Why Does This Friction Happen? | The agent starts each session without a mental model of the repository; unanswered questions become guesses |
+| 3 | Techniques to Optimize the Agent Environment | Overview of the seven areas and when each one applies |
+| 4 | AGENTS.md | A short hand-written file for commands, conventions, boundaries, and definition of done |
+| 5 | Scripts | One command per intent, non-interactive, stable exit codes, bounded output |
+| 6 | Skills | A repeatable procedure packaged with staged loading so detail is read only when relevant |
+| 7 | Hooks | Enforcement on harness events, independent of what the model decides to read |
+| 8 | MCP | Bringing in data that lives outside the checkout, at the highest context cost of the seven |
+| 9 | Isolation | Git worktrees per parallel task plus stacked PRs to keep reviews small |
+| 10 | Orchestration | Steering several agents at once; worth it only when review, not generation, is the bottleneck |
+| 11 | Common Anti-Patterns | Installing everything up front, auto-generating context files, over-long instructions, over-blocking hooks |
+| 12 | DevEx: From Developers to Coding Agents | Every improvement that helps humans maps onto the environment an agent needs |
+| 13 | Take Aways | What to adopt first, and how to know it helped |
+
+## Render
 
 ```sh
 npm install
-npm run build      # → output/index.html
-npm run preview    # open in browser
+npm run build      # renders both languages into output/
+npm run preview    # opens output/index.html in the browser
 ```
 
-Requires Node.js 20. If you use [mise](https://mise.jdx.dev/), run `mise install` first.
+Requires Node.js 20 (pinned via `mise.toml`). Run `mise install` first if you use mise.
+
+| File | Language |
+|---|---|
+| `output/index.html` | English (default) |
+| `output/index.vi.html` | Vietnamese |
+
+Both files include a floating language switcher linking to the other version.
+
+## Remote Control
+
+A mobile remote control is included. Open `output/remote.html` on a phone to drive slide navigation and read speaker notes in real time through the ntfy.sh relay.
 
 ## Project Structure
 
@@ -27,50 +59,14 @@ Requires Node.js 20. If you use [mise](https://mise.jdx.dev/), run `mise install
 slides/
   presentation.en.md  # English slide source
   presentation.vi.md  # Vietnamese slide source
-  images/             # images referenced in slides
-build.cjs             # build script — customize theming here
-package.json
-mise.toml             # Node.js version pin
-.github/
-  workflows/
-    deploy-pages.yml  # auto-deploy to GitHub Pages on push to main
-.agents/
-  skills/             # AI agent skills for writing and styling slides
-research/             # brainstorming notes and planning materials
-scripts/              # utility scripts (e.g., generate-pdf.cjs)
+  images/             # screenshots and QR codes referenced in slides
+build.cjs             # build script and slide post-processing
+public/
+  presentation/       # presentation.css and presentation.js
+  remote/             # mobile remote control
+.github/workflows/
+  deploy-pages.yml    # deploy to GitHub Pages on push to main
+.agents/skills/       # agent skills for content, styling, and release notes
 ```
 
-## Customizing
-
-### Change the presentation title
-
-Edit the `<!--markpress-opt-->` block at the top of `slides/presentation.en.md` (and the corresponding block in `slides/presentation.vi.md`):
-
-```markdown
-<!--markpress-opt
-{
-  "autoSplit": false,
-  "sanitize": false,
-  "title": "Your Presentation Title"
-}
-markpress-opt-->
-```
-
-### Colors, fonts, and layout
-
-All theming (color palette, fonts, slide positioning, CSS variables) is done in `build.cjs`.
-
-See [`.agents/skills/markpress-styling/SKILL.md`](.agents/skills/markpress-styling/SKILL.md) for the full reference.
-
-## GitHub Pages
-
-The included workflow (`deploy-pages.yml`) builds and deploys on every push to `main`.
-
-Enable GitHub Pages in your repository:
-- **Settings** → **Pages** → **Source**: `GitHub Actions`
-
-## Writing Slides
-
-Slides are written in `slides/presentation.en.md` (English) and `slides/presentation.vi.md` (Vietnamese), separated by `------` (six dashes).
-
-See [`.agents/skills/markpress-content/SKILL.md`](.agents/skills/markpress-content/SKILL.md) for the full guide.
+Theming lives in `public/presentation/presentation.css`; per-slide accents and entrance animations are CSS rules there. See [`.agents/skills/markpress-styling/SKILL.md`](.agents/skills/markpress-styling/SKILL.md).
