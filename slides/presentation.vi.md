@@ -11,7 +11,7 @@ markpress-opt-->
 # Xây dựng repository thân thiện với agent
 ## Những tinh chỉnh nhỏ giúp coding agent làm việc hiệu quả hơn trong codebase của bạn
 
-Tên của bạn · Tên sự kiện · 2026
+Nguyễn Văn Đức · Codegym Tech Talk · 2026
 
 <!-- SPEAKER NOTES
 Mở đầu bằng việc làm rõ phạm vi: đây là một chủ đề cụ thể và rất thực tế. Coding agent vốn dĩ đã có thể làm việc trên một repo bình thường mà không cần thiết lập gì đặc biệt. Những tối ưu ở đây chỉ giúp nó làm việc hiệu quả và mượt mà hơn.
@@ -97,7 +97,7 @@ Bốn hạng mục đầu tiên là các file nằm gọn trong checkout. MCP l�
 - Tự tay viết thay vì auto-gen: context file tự sinh chỉ làm đội chi phí token mà không tăng độ chính xác
 - Tối ưu context budget: chỉ giữ lại thông tin cốt lõi, tránh biến thành bản sao dài dòng của README
 
-![Ảnh chụp: AGENTS.md bên cạnh session đã dùng nó.](images/placeholder-agents-md.svg)
+![Ảnh chụp: AGENTS.md mã hoá quy ước của team.](images/agents-md.png)
 
 <!-- SPEAKER NOTES
 Một file ngắn gọn, do chính tay con người viết: tổng hợp lệnh chạy, cấu trúc thư mục vắn tắt, conventions, ranh giới cấm chạm, và tiêu chuẩn thế nào là xong (Done).
@@ -116,7 +116,7 @@ Về chi phí context: mỗi session agent sẽ phải đọc file này, nên h�
 - Chạy không tương tác (non-interactive), exit code chuẩn xác, giới hạn lượng output, fail-fast
 - Hỗ trợ cờ `--json` khi cần dữ liệu có cấu trúc
 
-![Ảnh so sánh: Lệnh verify khi thất bại bên trái, thành công bên phải.](images/placeholder-scripts.svg)
+![Ảnh so sánh: Lệnh verify khi thất bại bên trái, thành công bên phải.](images/scripts.png)
 
 <!-- SPEAKER NOTES
 Scripts giúp giảm bớt số vòng lặp agent phải loay hoay thử sai để xem dự án này chạy thế nào, đồng thời cắt ngắn những session dài lê thê mà phần lớn chỉ để xử lý các câu lệnh chạy lỗi.
@@ -136,7 +136,7 @@ Bạn sẽ thấy ngay giá trị của scripts ngay khi một quy trình thao t
 - Kiểm thử kỹ từng skill với task mới mà agent chưa từng gặp
 - Không đóng gói những việc chỉ làm một lần
 
-![Ảnh chụp: Một skill được kích hoạt, hiển thị name và description trước khi tải toàn bộ nội dung.](images/placeholder-skills.svg)
+![Ảnh chụp: Một skill được kích hoạt, hiển thị name và description trước khi tải toàn bộ nội dung.](images/skills.png)
 
 <!-- SPEAKER NOTES
 Skills giúp khắc phục tình trạng thiếu nhất quán khi thực hiện một quy trình — vốn dĩ chạy rất mượt khi có người nhớ đủ các bước, nhưng lại hay bị sót việc khi giao cho agent.
@@ -154,7 +154,7 @@ Chỉ nên đóng gói skill khi cùng một quy trình lặp đi lặp lại qu
 - Vòng đời sự kiện trong Copilot: `preToolUse`, `postToolUse`, `sessionStart`, `sessionEnd`
 - Con dao hai lưỡi: có thể phát tín hiệu nhầm khiến model bị rối, cần kiểm thử và theo dõi sát sao
 
-![Ảnh chụp: Một thao tác sửa file bị hook chặn lại và thông báo phản hồi mà agent nhận được.](images/placeholder-hooks.svg)
+![Ảnh chụp: Một thao tác sửa file bị hook chặn lại và thông báo phản hồi mà agent nhận được.](images/hooks.png)
 
 <!-- SPEAKER NOTES
 Hooks giúp ngăn chặn những lỗi mà các hướng dẫn bằng văn bản thường bất lực — chẳng hạn như việc agent tự ý sửa vào các path được bảo vệ hoặc commit file chưa format.
@@ -174,7 +174,7 @@ Một anti-pattern rất hay gặp cần tránh: viết hook chặn quá đà m�
 - Luôn ưu tiên dùng script nội bộ (local script) nếu script tự giải quyết được
 - Kiểm tra thực tế xem tool có thực sự được agent gọi hay không
 
-![Ảnh chụp: Một lượt gọi tool qua MCP và kết quả trả về ngay trong session.](images/placeholder-mcp.svg)
+![Ảnh chụp: Một lượt gọi tool qua MCP và kết quả trả về ngay trong session.](images/mcp.png)
 
 <!-- SPEAKER NOTES
 MCP giúp agent bớt phải đoán mò về những thông tin nghiệp vụ nằm ngoài phạm vi repository.
@@ -192,7 +192,9 @@ Tuy nhiên, nếu câu trả lời không nhất thiết phải nằm ngoài che
 - Tránh "quá tải review": biến code đồ sộ do agent sinh ra thành chuỗi PR nhỏ, tuần tự và độc lập
 - Cô lập hoàn toàn dependencies và biến môi trường giữa các session để tránh đụng độ tài nguyên
 
-![Ảnh chụp: Môi trường chạy song song độc lập với Git worktree và mô hình PR stack.](images/placeholder-isolation.svg)
+![Ảnh chụp: Mỗi task chạy song song trong một Git worktree riêng.](images/worktree.png)
+
+![Ảnh chụp: Chuỗi pull request nhỏ, phụ thuộc lẫn nhau.](images/stack-pr.png)
 
 <!-- SPEAKER NOTES
 Khi làm việc với coding agent, hai rào cản lớn nhất khi mở rộng quy mô là: đụng độ tài nguyên local và PR quá khổng lồ.
@@ -210,7 +212,7 @@ Kèm theo đó là kỹ thuật PR stack (stacked PRs / stacked diffs như cách
 - Chi phí đánh đổi ở đây là sự tập trung của con người, chứ không phải context của model
 - Tránh review mù: giao diện tập trung để theo dõi diff, terminal và tiến độ của từng agent
 
-![Ảnh chụp: Hai session chạy song song kèm danh sách file thay đổi (giao diện Agents trong VS Code).](images/placeholder-orchestration.svg)
+![Ảnh chụp: Hai session chạy song song kèm danh sách file thay đổi (giao diện Agents trong VS Code).](images/vscode-agent-windows.png)
 
 <!-- SPEAKER NOTES
 Orchestration là phần giao diện và công cụ điều phối (ví dụ như cửa sổ Agents trong VS Code). Nó chỉ thật sự đáng đầu tư khi điểm nghẽn của team bạn nằm ở khâu review code chứ không phải khâu sinh code.
@@ -300,7 +302,7 @@ Các tiêu chuẩn kỹ thuật cốt lõi (AGENTS.md, Agent Skills, MCP, VS Cod
 
 | GitHub | Website |
 |---|---|
-| ![GitHub QR](images/github-qr.svg) | ![Website QR](images/nvduc-qr.svg) |
+| ![GitHub QR](images/github-qr.png) | ![Website QR](images/nvduc-qr.png) |
 | ![GitHub icon](images/github-icon.svg) | ![Website icon](images/website-icon.svg) |
 
 <!-- SPEAKER NOTES

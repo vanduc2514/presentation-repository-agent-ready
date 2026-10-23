@@ -11,7 +11,7 @@ markpress-opt-->
 # Building an Agent-Friendly Repository
 ## Small optimizations that make a coding agent work better in your repository
 
-Your Name · Event Name · 2026
+Nguyen Van Duc · Codegym Tech Talk · 2026
 
 <!-- SPEAKER NOTES
 Open by clarifying the scope: this is a specific, practical topic. A coding agent already works in a standard repository without special setup. These optimizations simply help it work more effectively and smoothly.
@@ -97,7 +97,7 @@ The first four areas are files contained entirely within the checkout. MCP is a 
 - Write by hand, not auto-generated: generated context files inflate token costs without improving accuracy
 - Optimize context budget: retain only essential information, avoid duplicating READMEs or architecture essays
 
-![Screenshot: AGENTS.md alongside the session that consumed it.](images/placeholder-agents-md.svg)
+![Screenshot: AGENTS.md encoding team conventions.](images/agents-md.png)
 
 <!-- SPEAKER NOTES
 A short, hand-written file: commands, concise layout, conventions, boundaries, and definition of done.
@@ -116,7 +116,7 @@ Crucial advice: write it by hand. Auto-generating context files often inflates c
 - Non-interactive, predictable exit codes, bounded output, fail-fast
 - Support `--json` flag when structured data helps
 
-![Comparison image: verify command failing on the left, passing on the right.](images/placeholder-scripts.svg)
+![Comparison image: verify command failing on the left, passing on the right.](images/scripts.png)
 
 <!-- SPEAKER NOTES
 Scripts reduce rounds of trial and error discovering how to run things, eliminating long sessions dominated by failed commands.
@@ -136,7 +136,7 @@ You will see the value of scripts the moment any workflow begins to repeat.
 - Thoroughly test each skill against tasks the agent has not seen before
 - Do not package one-offs
 
-![Screenshot: A skill being invoked, showing name and description before loading full body.](images/placeholder-skills.svg)
+![Screenshot: A skill being invoked, showing name and description before loading full body.](images/skills.png)
 
 <!-- SPEAKER NOTES
 Skills prevent inconsistent execution of workflows that run smoothly when humans remember every step, but get missed or altered by agents.
@@ -154,7 +154,7 @@ Only package a skill when the same procedure repeats across multiple tasks and r
 - Event lifecycle in Copilot: `preToolUse`, `postToolUse`, `sessionStart`, `sessionEnd`
 - A double-edged sword: misconfigured blocking can send misleading signals to the model, requiring testing and monitoring
 
-![Screenshot: An edit blocked by a hook and the feedback message received by the agent.](images/placeholder-hooks.svg)
+![Screenshot: An edit blocked by a hook and the feedback message received by the agent.](images/hooks.png)
 
 <!-- SPEAKER NOTES
 Hooks prevent errors that written instructions fail to stop — such as editing protected paths or committing unformatted files.
@@ -174,7 +174,7 @@ A common anti-pattern to avoid: hooks that over-block everything, or hooks that 
 - Always prefer local scripts whenever a script can do the job
 - Verify whether the tool is actually invoked by the agent
 
-![Screenshot: An MCP tool call and its output returned directly in the session.](images/placeholder-mcp.svg)
+![Screenshot: An MCP tool call and its output returned directly in the session.](images/mcp.png)
 
 <!-- SPEAKER NOTES
 MCP reduces guesswork about context and business data outside the repository checkout.
@@ -192,7 +192,9 @@ However, if the answer does not strictly live outside the checkout, adding an MC
 - Eliminate review fatigue: transform massive agent-generated diffs into atomic, dependent PRs
 - Fully isolate dependencies and environment variables across sessions to avoid resource collisions
 
-![Screenshot: Isolated parallel environments with Git worktrees and stacked PRs.](images/placeholder-isolation.svg)
+![Screenshot: A Git worktree per parallel task.](images/worktree.png)
+
+![Screenshot: A stack of small, dependent pull requests.](images/stack-pr.png)
 
 <!-- SPEAKER NOTES
 When scaling coding agents, the two biggest bottlenecks are local resource collisions and massive PRs.
@@ -210,7 +212,7 @@ Paired with this is the practice of stacked PRs (stacked diffs popularized by to
 - Cost is human attention, not model context
 - Avoid blind reviews: centralized interface to monitor diffs, terminal outputs, and agent progress
 
-![Screenshot: Two concurrent sessions side by side with visible file changes (Agents view in VS Code).](images/placeholder-orchestration.svg)
+![Screenshot: Two concurrent sessions side by side with visible file changes (Agents view in VS Code).](images/vscode-agent-windows.png)
 
 <!-- SPEAKER NOTES
 Orchestration is the surface and coordination tooling (such as the Agents view in VS Code). It is only worth investing in when your team's bottleneck is code review, not code generation.
@@ -300,7 +302,7 @@ Core technical specifications (AGENTS.md, Agent Skills, MCP, VS Code Agents) alo
 
 | GitHub | Website |
 |---|---|
-| ![GitHub QR](images/github-qr.svg) | ![Website QR](images/nvduc-qr.svg) |
+| ![GitHub QR](images/github-qr.png) | ![Website QR](images/nvduc-qr.png) |
 | ![GitHub icon](images/github-icon.svg) | ![Website icon](images/website-icon.svg) |
 
 <!-- SPEAKER NOTES
