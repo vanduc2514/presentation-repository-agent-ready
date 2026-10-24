@@ -6,7 +6,7 @@
 }
 markpress-opt-->
 
-<!--slide-attr x=0 y=0 scale=1.2 -->
+<!--slide-attr x=0 y=0 rotate=0 scale=1.9 -->
 
 # Xây dựng repository thân thiện với agent
 ## Những tinh chỉnh nhỏ giúp coding agent làm việc hiệu quả hơn trong codebase của bạn
@@ -23,7 +23,7 @@ Môi trường chạy (Harness): các ví dụ minh họa dùng Copilot trong VS
 
 ------
 
-<!--slide-attr x=3600 y=0 rotate=2 scale=1.0 -->
+<!--slide-attr x=1400 y=0 rotate=3 scale=0.9 -->
 
 # Những "biểu hiện lạ" thường gặp khi sử dụng Agent
 
@@ -44,7 +44,7 @@ Cũng cần nói rõ: cả hai nghiên cứu không đo đạc chính xác các 
 
 ------
 
-<!--slide-attr x=5400 y=0 rotate=-1 scale=1.0 -->
+<!--slide-attr x=2800 y=0 rotate=-4 scale=1.45 -->
 
 # Vì sao lại có những biểu hiện này ?
 
@@ -67,7 +67,7 @@ Một đồng nghiệp mới vào team sẽ tích lũy hiểu biết dần qua t
 
 ------
 
-<!--slide-attr x=1800 y=1300 rotate=-2 scale=1.0 -->
+<!--slide-attr x=2800 y=1100 rotate=2 scale=0.85 -->
 
 # Các kỹ thuật để tối ưu môi trường cho agent
 
@@ -89,7 +89,7 @@ Bốn hạng mục đầu tiên là các file nằm gọn trong checkout. MCP l�
 
 ------
 
-<!--slide-attr x=3600 y=1300 rotate=2 scale=1.0 -->
+<!--slide-attr x=1400 y=1100 rotate=-5 scale=1.55 -->
 
 # AGENTS.md
 
@@ -108,7 +108,7 @@ Về chi phí context: mỗi session agent sẽ phải đọc file này, nên h�
 
 ------
 
-<!--slide-attr x=7200 y=1300 rotate=2 scale=1.0 -->
+<!--slide-attr x=0 y=1100 rotate=3 scale=1.0 -->
 
 # Scripts
 
@@ -126,7 +126,7 @@ Bạn sẽ thấy ngay giá trị của scripts ngay khi một quy trình thao t
 
 ------
 
-<!--slide-attr x=0 y=2600 rotate=-1 scale=1.0 -->
+<!--slide-attr x=0 y=2200 rotate=-3 scale=0.8 -->
 
 # Skills
 
@@ -146,7 +146,7 @@ Chỉ nên đóng gói skill khi cùng một quy trình lặp đi lặp lại qu
 
 ------
 
-<!--slide-attr x=1800 y=2600 rotate=2 scale=1.0 -->
+<!--slide-attr x=1400 y=2200 rotate=4 scale=1.3 -->
 
 # Hooks
 
@@ -165,7 +165,7 @@ Một anti-pattern rất hay gặp cần tránh: viết hook chặn quá đà m�
 
 ------
 
-<!--slide-attr x=3600 y=2600 rotate=-2 scale=1.0 -->
+<!--slide-attr x=2800 y=2200 rotate=-4 scale=0.9 -->
 
 # MCP
 
@@ -183,7 +183,7 @@ Tuy nhiên, nếu câu trả lời không nhất thiết phải nằm ngoài che
 
 ------
 
-<!--slide-attr x=5400 y=2600 rotate=1 scale=1.0 -->
+<!--slide-attr x=2800 y=3300 rotate=5 scale=1.6 -->
 
 # Isolation
 
@@ -204,7 +204,7 @@ Kèm theo đó là kỹ thuật PR stack (stacked PRs / stacked diffs như cách
 
 ------
 
-<!--slide-attr x=7200 y=2600 rotate=-1 scale=1.0 -->
+<!--slide-attr x=1400 y=3300 rotate=-3 scale=0.85 -->
 
 # Orchestration
 
@@ -222,7 +222,7 @@ Khi thiết lập custom agent và subagents, chúng ta phân chia vai trò chuy
 
 ------
 
-<!--slide-attr x=7200 y=3900 rotate=2 scale=1.0 -->
+<!--slide-attr x=0 y=3300 rotate=4 scale=1.35 -->
 
 # Những sai lầm phổ biến (Anti-patterns)
 
@@ -238,7 +238,7 @@ Năm ý trên slide là những sai lầm phổ biến nhất khi áp dụng tr�
 
 ------
 
-<!--slide-attr x=0 y=5200 rotate=-1 scale=1.0 -->
+<!--slide-attr x=0 y=4400 rotate=-3 scale=0.9 -->
 
 # DevEx: Từ lập trình viên đến coding agent
 
@@ -258,7 +258,7 @@ DevEx (Developer Experience) không chỉ có ý nghĩa với con người. Mọ
 
 ------
 
-<!--slide-attr x=1800 y=5200 rotate=2 scale=1.0 -->
+<!--slide-attr x=1400 y=4400 rotate=4 scale=1.5 -->
 
 # Take Aways
 
@@ -276,7 +276,7 @@ Nếu sau khi bạn thay đổi repo mà các session không hề bớt nghẽn 
 
 ------
 
-<!--slide-attr x=3600 y=5200 rotate=-2 scale=1.0 -->
+<!--slide-attr x=2800 y=4400 rotate=-4 scale=0.9 -->
 
 # Tài liệu tham khảo
 
@@ -296,7 +296,7 @@ Các tiêu chuẩn kỹ thuật cốt lõi (AGENTS.md, Agent Skills, MCP, VS Cod
 
 ------
 
-<!--slide-attr x=5400 y=5200 rotate=1 scale=1.1 -->
+<!--slide-attr x=4200 y=4400 rotate=2 scale=1.15 -->
 
 # Cảm ơn mọi người đã theo dõi!
 

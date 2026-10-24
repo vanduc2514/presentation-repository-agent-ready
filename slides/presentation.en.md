@@ -6,7 +6,7 @@
 }
 markpress-opt-->
 
-<!--slide-attr x=0 y=0 scale=1.2 -->
+<!--slide-attr x=0 y=0 rotate=0 scale=1.9 -->
 
 # Building an Agent-Friendly Repository
 ## Small optimizations that make a coding agent work better in your repository
@@ -23,7 +23,7 @@ Harness: examples use Copilot in VS Code. Hook names and skill frontmatter follo
 
 ------
 
-<!--slide-attr x=3600 y=0 rotate=2 scale=1.0 -->
+<!--slide-attr x=1400 y=0 rotate=3 scale=0.9 -->
 
 # Common "Friction Points" When Using Agents
 
@@ -44,7 +44,7 @@ Be explicit: neither study measures these exact failure modes, and neither was r
 
 ------
 
-<!--slide-attr x=5400 y=0 rotate=-1 scale=1.0 -->
+<!--slide-attr x=2800 y=0 rotate=-4 scale=1.45 -->
 
 # Why Does This Friction Happen?
 
@@ -67,7 +67,7 @@ This is the core mechanism that the rest of the talk builds on. This argument is
 
 ------
 
-<!--slide-attr x=1800 y=1300 rotate=-2 scale=1.0 -->
+<!--slide-attr x=2800 y=1100 rotate=2 scale=0.85 -->
 
 # Techniques to Optimize the Agent Environment
 
@@ -89,7 +89,7 @@ The first four areas are files contained entirely within the checkout. MCP is a 
 
 ------
 
-<!--slide-attr x=3600 y=1300 rotate=2 scale=1.0 -->
+<!--slide-attr x=1400 y=1100 rotate=-5 scale=1.55 -->
 
 # AGENTS.md
 
@@ -108,7 +108,7 @@ Crucial advice: write it by hand. Auto-generating context files often inflates c
 
 ------
 
-<!--slide-attr x=7200 y=1300 rotate=2 scale=1.0 -->
+<!--slide-attr x=0 y=1100 rotate=3 scale=1.0 -->
 
 # Scripts
 
@@ -126,7 +126,7 @@ You will see the value of scripts the moment any workflow begins to repeat.
 
 ------
 
-<!--slide-attr x=0 y=2600 rotate=-1 scale=1.0 -->
+<!--slide-attr x=0 y=2200 rotate=-3 scale=0.8 -->
 
 # Skills
 
@@ -146,7 +146,7 @@ Only package a skill when the same procedure repeats across multiple tasks and r
 
 ------
 
-<!--slide-attr x=1800 y=2600 rotate=2 scale=1.0 -->
+<!--slide-attr x=1400 y=2200 rotate=4 scale=1.3 -->
 
 # Hooks
 
@@ -165,7 +165,7 @@ A common anti-pattern to avoid: hooks that over-block everything, or hooks that 
 
 ------
 
-<!--slide-attr x=3600 y=2600 rotate=-2 scale=1.0 -->
+<!--slide-attr x=2800 y=2200 rotate=-4 scale=0.9 -->
 
 # MCP
 
@@ -183,7 +183,7 @@ However, if the answer does not strictly live outside the checkout, adding an MC
 
 ------
 
-<!--slide-attr x=5400 y=2600 rotate=1 scale=1.0 -->
+<!--slide-attr x=2800 y=3300 rotate=5 scale=1.6 -->
 
 # Isolation
 
@@ -204,7 +204,7 @@ Paired with this is the practice of stacked PRs (stacked diffs popularized by to
 
 ------
 
-<!--slide-attr x=7200 y=2600 rotate=-1 scale=1.0 -->
+<!--slide-attr x=1400 y=3300 rotate=-3 scale=0.85 -->
 
 # Orchestration
 
@@ -222,7 +222,7 @@ When setting up custom agents and subagents, we define specialized roles: planne
 
 ------
 
-<!--slide-attr x=7200 y=3900 rotate=2 scale=1.0 -->
+<!--slide-attr x=0 y=3300 rotate=4 scale=1.35 -->
 
 # Common Anti-Patterns
 
@@ -238,7 +238,7 @@ The five items on the slide are the most common real-world pitfalls; others are 
 
 ------
 
-<!--slide-attr x=0 y=5200 rotate=-1 scale=1.0 -->
+<!--slide-attr x=0 y=4400 rotate=-3 scale=0.9 -->
 
 # DevEx: From Developers to Coding Agents
 
@@ -258,7 +258,7 @@ The core difference: Humans accumulate tacit knowledge over time, while agents s
 
 ------
 
-<!--slide-attr x=1800 y=5200 rotate=2 scale=1.0 -->
+<!--slide-attr x=1400 y=4400 rotate=4 scale=1.5 -->
 
 # Take Aways
 
@@ -276,7 +276,7 @@ If sessions in your own repository do not become smoother or more effective afte
 
 ------
 
-<!--slide-attr x=3600 y=5200 rotate=-2 scale=1.0 -->
+<!--slide-attr x=2800 y=4400 rotate=-4 scale=0.9 -->
 
 # References
 
@@ -296,7 +296,7 @@ Core technical specifications (AGENTS.md, Agent Skills, MCP, VS Code Agents) alo
 
 ------
 
-<!--slide-attr x=5400 y=5200 rotate=1 scale=1.1 -->
+<!--slide-attr x=4200 y=4400 rotate=2 scale=1.15 -->
 
 # Thank You for Listening!
 
