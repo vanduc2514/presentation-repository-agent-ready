@@ -55,7 +55,7 @@ body {
   border-radius: var(--radius);
   background: var(--surface);
   opacity: 0;
-  transition: opacity 200ms ease;
+  transition: opacity 520ms ease;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -620,23 +620,23 @@ body {
 }
 
 .step.active li:nth-child(1) {
-  animation-delay: 80ms;
+  animation-delay: 340ms;
 }
 
 .step.active li:nth-child(2) {
-  animation-delay: 130ms;
+  animation-delay: 390ms;
 }
 
 .step.active li:nth-child(3) {
-  animation-delay: 180ms;
+  animation-delay: 440ms;
 }
 
 .step.active li:nth-child(4) {
-  animation-delay: 230ms;
+  animation-delay: 490ms;
 }
 
 .step.active li:nth-child(n + 5) {
-  animation-delay: 280ms;
+  animation-delay: 540ms;
 }
 
 .step.active > .step-media {
@@ -645,31 +645,31 @@ body {
 
 .step.active > *:nth-child(2),
 .step.active > .step-copy > *:nth-child(1) {
-  animation-delay: 70ms;
+  animation-delay: 320ms;
 }
 
 .step.active > *:nth-child(3),
 .step.active > .step-copy > *:nth-child(2) {
-  animation-delay: 130ms;
+  animation-delay: 390ms;
 }
 
 .step.active > *:nth-child(4),
 .step.active > .step-copy > *:nth-child(3) {
-  animation-delay: 190ms;
+  animation-delay: 470ms;
 }
 
 .step.active > *:nth-child(5),
 .step.active > .step-copy > *:nth-child(4) {
-  animation-delay: 250ms;
+  animation-delay: 520ms;
 }
 
 .step.active > *:nth-child(n + 6),
 .step.active > .step-copy > *:nth-child(n + 5) {
-  animation-delay: 310ms;
+  animation-delay: 560ms;
 }
 
 .step.active > .step-media {
-  animation-delay: 90ms;
+  animation-delay: 380ms;
 }
 
 .step.active::after {
@@ -680,6 +680,23 @@ body {
 .step.active > .step-copy::after {
   animation: mp-bar-grow 520ms cubic-bezier(0.22, 0.68, 0.28, 1) both;
   transform-origin: top center;
+  animation-delay: 300ms;
+}
+
+/* ── CAMERA FLIGHT ─────────────────────────────────────────────────────
+ * impress.js drives the root/canvas transform and sets the timing function
+ * inline, so the curve has to be overridden here. The deck uses a wide
+ * scale range per slide, which makes the camera zoom into and out of the
+ * canvas on the way to each step.
+ * ───────────────────────────────────────────────────────────────────── */
+#impress,
+#impress > div {
+  transition-timing-function: cubic-bezier(0.32, 0.02, 0.16, 1) !important;
+  transition-duration: 900ms !important;
+  /* impress.js staggers scale and translate by half the duration; running
+     them together keeps the outgoing and incoming slides in frame for the
+     whole flight instead of leaving the canvas empty mid-transition. */
+  transition-delay: 0s !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

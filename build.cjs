@@ -174,7 +174,7 @@ const buildPresentation = async (input, output, langSwitcherHtml, pdfSuffix) => 
 
   stripped = stripped.replace(
     /(<div[^>]*id=["']impress["'][^>]*)(>)/,
-    '$1 data-transition-duration="200"$2',
+    '$1 data-transition-duration="1000" data-perspective="1100"$2',
   );
 
   stripped = applyHighlighting(stripped);
